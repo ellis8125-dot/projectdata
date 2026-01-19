@@ -1657,26 +1657,24 @@ function ProjectView({ project, onUpdate, onAddSite, onSelectSite, onDeleteSite,
           const multiplier = col.multiplier ? parseFloat(col.multiplier) : null;
           const isRatio = !multiplier;
           
-          headerRow.push('Time'); // Time for this specific column
+          // Time column BEFORE this column's data
+          headerRow.push('Time');
           
           if (multiplier) {
-            // Flow meter: raw, calculated, daily flow
-            headerRow.push(`${col.title} (raw)`);
-            headerRow.push(`${col.title} (${col.unit || 'calculated'})`);
+            // Flow meter: raw, calculated, daily flow, calculations
+            headerRow.push(`${col.title} (${col.unit || 'raw'})`);
             if (col.calculations?.dailyFlow) {
               headerRow.push(`${col.title} - Daily Flow`);
             }
+            if (col.calculations?.monthlyTotal) {
+              headerRow.push(`${col.title} - Monthly Total`);
+            }
+            if (col.calculations?.monthlyAverage) {
+              headerRow.push(`${col.title} - Monthly Avg`);
+            }
           } else {
-            // Regular column
+            // Regular column - just the value
             headerRow.push(`${col.title} (${col.unit || ''})`);
-          }
-          
-          // Add calculation columns
-          if (col.calculations?.monthlyTotal) {
-            headerRow.push(`${col.title} - Monthly Total`);
-          }
-          if (col.calculations?.monthlyAverage) {
-            headerRow.push(`${col.title} - Monthly Avg`);
           }
         });
       });
@@ -1818,26 +1816,26 @@ function ProjectView({ project, onUpdate, onAddSite, onSelectSite, onDeleteSite,
             const colData = assetData.columns[col.title];
             const multiplier = parseFloat(col.multiplier) || null;
             
-            // Add time for this specific column
+            // Add time for this column
             dataRow.push(colData?.time || '');
             
             if (colData?.isRatio) {
               dataRow.push(colData.raw);
             } else if (multiplier) {
-              dataRow.push(colData?.raw || '');
+              // Flow meter: raw value (with multiplier applied), daily flow, calculations
               dataRow.push(colData?.calculated || '');
               if (col.calculations?.dailyFlow) {
                 dataRow.push(calculations[date]?.[asset.id]?.[`${col.title}_dailyFlow`] || '');
               }
+              if (col.calculations?.monthlyTotal) {
+                dataRow.push(calculations[date]?.[asset.id]?.[`${col.title}_monthlyTotal`] || '');
+              }
+              if (col.calculations?.monthlyAverage) {
+                dataRow.push(calculations[date]?.[asset.id]?.[`${col.title}_monthlyAvg`] || '');
+              }
             } else {
+              // Regular column - just value
               dataRow.push(colData?.raw || '');
-            }
-            
-            if (col.calculations?.monthlyTotal) {
-              dataRow.push(calculations[date]?.[asset.id]?.[`${col.title}_monthlyTotal`] || '');
-            }
-            if (col.calculations?.monthlyAverage) {
-              dataRow.push(calculations[date]?.[asset.id]?.[`${col.title}_monthlyAvg`] || '');
             }
           });
         });
