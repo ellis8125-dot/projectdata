@@ -1,0 +1,4480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <meta name="description" content="Field Data Collection and Management">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ProjectData">
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlByb2plY3REYXRhIEFwcCIsCiAgInNob3J0X25hbWUiOiAiUHJvamVjdERhdGEiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzFhMWExZCIsCiAgInRoZW1lX2NvbG9yIjogIiM2NjdlZWEiLAogICJvcmllbnRhdGlvbiI6ICJwb3J0cmFpdCIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbCwlM0Nzdmcgd2lkdGg9JzE5MicgaGVpZ2h0PScxOTInIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyclM0UlM0NyZWN0IHdpZHRoPScxOTInIGhlaWdodD0nMTkyJyBmaWxsPSclMjM2NjdlZWEnIHJ4PScyNCcvJTNFJTNDdGV4dCB4PSc1MCUyNScgeT0nNTAlMjUnIGZvbnQtc2l6ZT0nODAnIGZpbGw9J3doaXRlJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBkb21pbmFudC1iYXNlbGluZT0nbWlkZGxlJyBmb250LWZhbWlseT0nc2Fucy1zZXJpZiclM0VQRCUzQy90ZXh0JTNFJTNDL3N2ZyUzRSIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiLAogICAgICAic2l6ZXMiOiAiMTkyeDE5MiIKICAgIH0sCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB3aWR0aD0nNTEyJyBoZWlnaHQ9JzUxMicgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyUzRSUzQ3JlY3Qgd2lkdGg9JzUxMicgaGVpZ2h0PSc1MTInIGZpbGw9JyUyMzY2N2VlYScgcng9JzY0Jy8lM0UlM0N0ZXh0IHg9JzUwJTI1JyB5PSc1MCUyNScgZm9udC1zaXplPScyNDAnIGZpbGw9J3doaXRlJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBkb21pbmFudC1iYXNlbGluZT0nbWlkZGxlJyBmb250LWZhbWlseT0nc2Fucy1zZXJpZiclM0VQRCUzQy90ZXh0JTNFJTNDL3N2ZyUzRSIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIKICAgIH0KICBdCn0=">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg width='192' height='192' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='192' height='192' fill='%23667eea' rx='24'/%3E%3Ctext x='50%25' y='50%25' font-size='80' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='sans-serif'%3EPD%3C/text%3E%3C/svg%3E">
+    <title>ProjectData App</title>
+    <script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.24.4/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+// Icon components
+const Camera = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>📷</span>;
+const Plus = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>➕</span>;
+const Download = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>⬇️</span>;
+const MapPin = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>📍</span>;
+const Edit2 = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>✏️</span>;
+const Trash2 = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>🗑️</span>;
+const ChevronRight = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>›</span>;
+const Home = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>🏠</span>;
+const FolderOpen = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>📂</span>;
+const Calendar = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>📅</span>;
+const Search = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>🔍</span>;
+const Menu = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>☰</span>;
+const X = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>✕</span>;
+const Check = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>✓</span>;
+const FileSpreadsheet = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>📊</span>;
+
+// Mock storage
+window.storage = {
+  async get(key) {
+    const value = localStorage.getItem(key);
+    return value ? { key, value, shared: false } : null;
+  },
+  async set(key, value) {
+    localStorage.setItem(key, value);
+    return { key, value, shared: false };
+  },
+  async delete(key) {
+    localStorage.removeItem(key);
+    return { key, deleted: true, shared: false };
+  },
+  async list(prefix) {
+    const keys = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith(prefix)) keys.push(key);
+    }
+    return { keys, prefix, shared: false };
+  }
+};
+
+// Main App Component
+function ProjectDataApp() {
+  const [projects, setProjects] = useState([]);
+  const [currentView, setCurrentView] = useState('home');
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedSite, setSelectedSite] = useState(null);
+  const [selectedAsset, setSelectedAsset] = useState(null);
+  const [showMenu, setShowMenu] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('app-theme') || 'dark';
+  });
+
+  // Apply theme on change
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('app-theme', theme);
+  }, [theme]);
+
+  // Android Back Button Handler - Navigate within app
+  useEffect(() => {
+    const handleBackButton = (e) => {
+      // Handle back button to navigate within app instead of closing
+      if (currentView === 'asset' && selectedAsset) {
+        e.preventDefault();
+        setSelectedAsset(null);
+        setCurrentView('site');
+        window.history.pushState(null, '', window.location.href);
+      } else if (currentView === 'site' && selectedSite) {
+        e.preventDefault();
+        setSelectedSite(null);
+        setCurrentView('project');
+        window.history.pushState(null, '', window.location.href);
+      } else if (currentView === 'project' && selectedProject) {
+        e.preventDefault();
+        setSelectedProject(null);
+        setCurrentView('home');
+        window.history.pushState(null, '', window.location.href);
+      }
+      // If on home, let it close naturally
+    };
+
+    window.addEventListener('popstate', handleBackButton);
+    
+    // Push initial state to enable back button handling
+    window.history.pushState(null, '', window.location.href);
+    
+    return () => window.removeEventListener('popstate', handleBackButton);
+  }, [currentView, selectedProject, selectedSite, selectedAsset]);
+
+  // Load data from persistent storage on mount
+  useEffect(() => {
+    loadProjects();
+  }, []);
+
+  const loadProjects = async () => {
+    try {
+      const result = await window.storage.list('project:');
+      if (result && result.keys) {
+        const loadedProjects = await Promise.all(
+          result.keys.map(async (key) => {
+            const data = await window.storage.get(key);
+            return data ? JSON.parse(data.value) : null;
+          })
+        );
+        setProjects(loadedProjects.filter(p => p !== null));
+      }
+    } catch (error) {
+      console.log('No existing projects found, starting fresh');
+      setProjects([]);
+    }
+  };
+
+  const saveProject = async (project) => {
+    try {
+      await window.storage.set(`project:${project.id}`, JSON.stringify(project));
+    } catch (error) {
+      console.error('Error saving project:', error);
+    }
+  };
+
+  const createProject = () => {
+    const newProject = {
+      id: Date.now().toString(),
+      name: 'New Project',
+      address: '',
+      gateCode: '',
+      keyNumber: '',
+      sites: [],
+      createdAt: new Date().toISOString()
+    };
+    const updatedProjects = [...projects, newProject];
+    setProjects(updatedProjects);
+    saveProject(newProject);
+    setSelectedProject(newProject);
+    setCurrentView('project');
+  };
+
+  const deleteProject = async (projectId) => {
+    if (window.confirm('Are you sure you want to delete this project?')) {
+      try {
+        await window.storage.delete(`project:${projectId}`);
+        setProjects(projects.filter(p => p.id !== projectId));
+        if (selectedProject && selectedProject.id === projectId) {
+          setSelectedProject(null);
+          setCurrentView('home');
+        }
+      } catch (error) {
+        console.error('Error deleting project:', error);
+      }
+    }
+  };
+
+  const updateProject = (updatedProject) => {
+    const updatedProjects = projects.map(p => 
+      p.id === updatedProject.id ? updatedProject : p
+    );
+    setProjects(updatedProjects);
+    saveProject(updatedProject);
+    setSelectedProject(updatedProject);
+  };
+
+  const addSite = (project) => {
+    const newSite = {
+      id: Date.now().toString(),
+      name: 'New Site',
+      address: '',
+      gateCode: '',
+      keyNumber: '',
+      location: { lat: null, lng: null },
+      assets: [],
+      isNew: true // Flag to indicate this is a newly created site
+    };
+    const updatedProject = {
+      ...project,
+      sites: [...project.sites, newSite]
+    };
+    updateProject(updatedProject);
+    
+    // Navigate to the new site and trigger edit mode
+    setSelectedSite(newSite);
+    setCurrentView('site');
+    // Note: The SiteView component will need to check if it's a new site and auto-enable editing
+  };
+
+  const updateSite = (project, siteId, updatedSite) => {
+    const updatedProject = {
+      ...project,
+      sites: project.sites.map(s => s.id === siteId ? updatedSite : s)
+    };
+    updateProject(updatedProject);
+    // Also update selectedSite if this is the currently selected site
+    if (selectedSite && selectedSite.id === siteId) {
+      setSelectedSite(updatedSite);
+    }
+  };
+
+  const deleteSite = (project, siteId) => {
+    if (window.confirm('Are you sure you want to delete this site?')) {
+      const updatedProject = {
+        ...project,
+        sites: project.sites.filter(s => s.id !== siteId)
+      };
+      updateProject(updatedProject);
+      if (selectedSite && selectedSite.id === siteId) {
+        setSelectedSite(null);
+        setCurrentView('project');
+      }
+    }
+  };
+
+  const addAsset = (project, site) => {
+    const newAsset = {
+      id: Date.now().toString(),
+      name: 'New Asset',
+      address: '',
+      gateCode: '',
+      keyNumber: '',
+      location: { lat: null, lng: null },
+      data: [],
+      spreadsheet: [],
+      columns: [
+        { id: '1', title: 'Reading', unit: '' }
+      ],
+      isNew: true // Flag to indicate this is a newly created asset
+    };
+    const updatedSite = {
+      ...site,
+      assets: [...(site.assets || []), newAsset]
+    };
+    updateSite(project, site.id, updatedSite);
+    
+    // Navigate to the new asset and trigger edit mode
+    setSelectedAsset(newAsset);
+    setCurrentView('asset');
+  };
+
+  const updateAsset = (project, site, assetId, updatedAsset) => {
+    const updatedSite = {
+      ...site,
+      assets: site.assets.map(a => a.id === assetId ? updatedAsset : a)
+    };
+    updateSite(project, site.id, updatedSite);
+    // Also update selectedAsset if this is the currently selected asset
+    if (selectedAsset && selectedAsset.id === assetId) {
+      setSelectedAsset(updatedAsset);
+    }
+  };
+
+  const deleteAsset = (project, site, assetId) => {
+    if (window.confirm('Are you sure you want to delete this asset?')) {
+      const updatedSite = {
+        ...site,
+        assets: site.assets.filter(a => a.id !== assetId)
+      };
+      updateSite(project, site.id, updatedSite);
+      if (selectedAsset && selectedAsset.id === assetId) {
+        setSelectedAsset(null);
+        setCurrentView('site');
+      }
+    }
+  };
+
+  return (
+    <div className="app-container">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        /* Default Dark Theme - Soft Pastels */
+        :root, [data-theme="dark"] {
+          --primary: #a8c7fa;
+          --primary-dark: #89b4f7;
+          --secondary: #b8b5ff;
+          --success: #9fd6b8;
+          --danger: #ffa8a3;
+          --warning: #ffe59e;
+          --bg-primary: #2b2d3a;
+          --bg-secondary: #3a3d4f;
+          --bg-tertiary: #4a4d61;
+          --bg-quaternary: #5a5d71;
+          --text-primary: #f5f5f5;
+          --text-secondary: #d4d4d9;
+          --text-tertiary: #b3b3b8;
+          --border: #5a5d71;
+          --shadow: rgba(0, 0, 0, 0.2);
+        }
+
+        /* Light Theme - Soft Pastels */
+        [data-theme="light"] {
+          --primary: #89b4f7;
+          --primary-dark: #6a9ff5;
+          --secondary: #a8a5f5;
+          --success: #7ec9a3;
+          --danger: #ff8f8a;
+          --warning: #ffd68a;
+          --bg-primary: #d4d4e0;
+          --bg-secondary: #c8c8d8;
+          --bg-tertiary: #bcbcd0;
+          --bg-quaternary: #b0b0c8;
+          --text-primary: #ffffff;
+          --text-secondary: #f0f0f5;
+          --text-tertiary: #e0e0eb;
+          --border: #a8a8bc;
+          --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Blue Theme - Soft Pastels */
+        [data-theme="blue"] {
+          --primary: #a8d5f7;
+          --primary-dark: #89c7f5;
+          --secondary: #b8e5ff;
+          --success: #9fd6b8;
+          --danger: #ffa8a3;
+          --warning: #ffe59e;
+          --bg-primary: #2d3d4f;
+          --bg-secondary: #3d4d61;
+          --bg-tertiary: #4d5d73;
+          --bg-quaternary: #5d6d85;
+          --text-primary: #e8f4ff;
+          --text-secondary: #c8e0f5;
+          --text-tertiary: #a8c7e0;
+          --border: #5d6d85;
+          --shadow: rgba(0, 0, 0, 0.2);
+        }
+
+        /* Green Theme - Soft Pastels */
+        [data-theme="green"] {
+          --primary: #9fd6b8;
+          --primary-dark: #7ec9a3;
+          --secondary: #a8e0cc;
+          --success: #9fd6b8;
+          --danger: #ffa8a3;
+          --warning: #ffe59e;
+          --bg-primary: #2d3d38;
+          --bg-secondary: #3d4d48;
+          --bg-tertiary: #4d5d58;
+          --bg-quaternary: #5d6d68;
+          --text-primary: #e8f5f0;
+          --text-secondary: #c8e0d8;
+          --text-tertiary: #a8ccbf;
+          --border: #5d6d68;
+          --shadow: rgba(0, 0, 0, 0.2);
+        }
+
+        /* Purple Theme - Soft Pastels */
+        [data-theme="purple"] {
+          --primary: #d4b8f7;
+          --primary-dark: #c299f5;
+          --secondary: #e0c8ff;
+          --success: #9fd6b8;
+          --danger: #ffa8a3;
+          --warning: #ffe59e;
+          --bg-primary: #3d2d4f;
+          --bg-secondary: #4d3d61;
+          --bg-tertiary: #5d4d73;
+          --bg-quaternary: #6d5d85;
+          --text-primary: #f5e8ff;
+          --text-secondary: #e0c8f5;
+          --text-tertiary: #ccb3e0;
+          --border: #6d5d85;
+          --shadow: rgba(0, 0, 0, 0.2);
+        }
+
+        /* Ocean Theme - Soft Pastels */
+        [data-theme="ocean"] {
+          --primary: #9fe0e6;
+          --primary-dark: #7dd4db;
+          --secondary: #a8e5eb;
+          --success: #9fd6b8;
+          --danger: #ffa8a3;
+          --warning: #ffe59e;
+          --bg-primary: #2d3d47;
+          --bg-secondary: #3d4d59;
+          --bg-tertiary: #4d5d6b;
+          --bg-quaternary: #5d6d7d;
+          --text-primary: #e8f5f7;
+          --text-secondary: #c8e0e5;
+          --text-tertiary: #a8ccd4;
+          --border: #5d6d7d;
+          --shadow: rgba(0, 0, 0, 0.2);
+        }
+
+        body {
+          font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+          background: var(--bg-primary);
+          color: var(--text-primary);
+          overflow-x: hidden;
+        }
+
+        /* Dark Theme Background - Soft Pastels */
+        [data-theme="dark"] .app-container {
+          background: linear-gradient(135deg, #2b2d3a 0%, #3d4052 50%, #4a4d66 100%);
+        }
+
+        [data-theme="dark"] .app-container::before {
+          background: 
+            radial-gradient(circle at 20% 30%, rgba(168, 199, 250, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(184, 181, 255, 0.15) 0%, transparent 50%);
+        }
+
+        /* Light Theme Background - Soft Pastels */
+        [data-theme="light"] .app-container {
+          background: linear-gradient(135deg, #d4d4e0 0%, #c8c8d8 50%, #bcbcd0 100%);
+        }
+
+        [data-theme="light"] .app-container::before {
+          background: 
+            radial-gradient(circle at 20% 30%, rgba(137, 180, 247, 0.12) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(168, 165, 245, 0.12) 0%, transparent 50%);
+        }
+
+        /* Blue Theme Background - Soft Pastels */
+        [data-theme="blue"] .app-container {
+          background: linear-gradient(135deg, #2d3d4f 0%, #3d4d61 50%, #4d5d75 100%);
+        }
+
+        [data-theme="blue"] .app-container::before {
+          background: 
+            radial-gradient(circle at 20% 30%, rgba(168, 213, 247, 0.18) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(184, 229, 255, 0.15) 0%, transparent 50%);
+        }
+
+        /* Green Theme Background - Soft Pastels */
+        [data-theme="green"] .app-container {
+          background: linear-gradient(135deg, #2d3d38 0%, #3d4d48 50%, #4d5d5c 100%);
+        }
+
+        [data-theme="green"] .app-container::before {
+          background: 
+            radial-gradient(circle at 20% 30%, rgba(159, 214, 184, 0.18) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(168, 224, 204, 0.15) 0%, transparent 50%);
+        }
+
+        /* Purple Theme Background - Soft Pastels */
+        [data-theme="purple"] .app-container {
+          background: linear-gradient(135deg, #3d2d4f 0%, #4d3d61 50%, #5d4d75 100%);
+        }
+
+        [data-theme="purple"] .app-container::before {
+          background: 
+            radial-gradient(circle at 20% 30%, rgba(212, 184, 247, 0.18) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(224, 200, 255, 0.15) 0%, transparent 50%);
+        }
+
+        /* Ocean Theme Background - Soft Pastels */
+        [data-theme="ocean"] .app-container {
+          background: linear-gradient(135deg, #2d3d47 0%, #3d4d59 50%, #4d5d6f 100%);
+        }
+
+        [data-theme="ocean"] .app-container::before {
+          background: 
+            radial-gradient(circle at 20% 30%, rgba(159, 224, 230, 0.18) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(168, 229, 235, 0.15) 0%, transparent 50%);
+        }
+
+        .app-container {
+          min-height: 100vh;
+          position: relative;
+        }
+
+        .app-container::before {
+          content: '';
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        .header {
+          background: rgba(28, 28, 30, 0.8);
+          backdrop-filter: blur(20px);
+          border-bottom: 1px solid var(--border);
+          padding: 1rem 1.5rem;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          position: sticky;
+          top: 0;
+          z-index: 100;
+          animation: slideDown 0.4s ease-out;
+        }
+
+        @keyframes slideDown {
+          from {
+            transform: translateY(-100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+
+        .header-title {
+          font-size: 1.5rem;
+          font-weight: 700;
+          background: linear-gradient(135deg, #0a84ff, #5e5ce6);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        .header-actions {
+          display: flex;
+          gap: 0.75rem;
+          align-items: center;
+        }
+
+        .search-box {
+          position: relative;
+          display: none;
+        }
+
+        @media (min-width: 768px) {
+          .search-box {
+            display: block;
+          }
+        }
+
+        .search-input {
+          background: var(--bg-tertiary);
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+          color: var(--text-primary);
+          font-size: 0.875rem;
+          width: 200px;
+          transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+          outline: none;
+          border-color: var(--primary);
+          width: 300px;
+          box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.1);
+        }
+
+        .search-icon {
+          position: absolute;
+          left: 0.75rem;
+          top: 50%;
+          transform: translateY(-50%);
+          color: var(--text-tertiary);
+        }
+
+        .btn {
+          background: var(--bg-tertiary);
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          padding: 0.5rem 1rem;
+          color: var(--text-primary);
+          font-size: 0.875rem;
+          font-weight: 500;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          transition: all 0.3s ease;
+          font-family: 'Outfit', sans-serif;
+        }
+
+        .btn:hover {
+          background: var(--bg-quaternary);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .btn:active {
+          transform: translateY(0);
+        }
+
+        .btn-primary {
+          background: linear-gradient(135deg, var(--primary), var(--secondary));
+          border: none;
+          color: white;
+          font-weight: 600;
+        }
+
+        .btn-primary:hover {
+          background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
+          box-shadow: 0 4px 20px rgba(10, 132, 255, 0.4);
+        }
+
+        .btn-danger {
+          background: var(--danger);
+          border: none;
+          color: white;
+        }
+
+        .btn-danger:hover {
+          background: #e03a30;
+          box-shadow: 0 4px 20px rgba(255, 69, 58, 0.4);
+        }
+
+        .btn-icon {
+          padding: 0.5rem;
+          min-width: auto;
+        }
+
+        .main-content {
+          padding: 2rem;
+          max-width: 1400px;
+          margin: 0 auto;
+          position: relative;
+          z-index: 1;
+        }
+
+        .breadcrumb {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin-bottom: 2rem;
+          color: var(--text-secondary);
+          font-size: 0.875rem;
+          animation: fadeIn 0.5s ease-out;
+          flex-wrap: wrap;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .breadcrumb-item {
+          cursor: pointer;
+          transition: color 0.2s;
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+        }
+
+        .breadcrumb-item:hover {
+          color: var(--primary);
+        }
+
+        .breadcrumb-item.active {
+          color: var(--text-primary);
+          font-weight: 500;
+        }
+
+        .projects-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+          gap: 1.5rem;
+          animation: fadeIn 0.6s ease-out;
+        }
+
+        .project-card {
+          background: rgba(28, 28, 30, 0.8);
+          backdrop-filter: blur(10px);
+          border: 1px solid var(--border);
+          border-radius: 16px;
+          padding: 1.5rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .project-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 4px;
+          background: linear-gradient(90deg, var(--primary), var(--secondary));
+          transform: scaleX(0);
+          transition: transform 0.3s ease;
+        }
+
+        .project-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 8px 24px var(--shadow);
+          border-color: var(--primary);
+        }
+
+        .project-card:hover::before {
+          transform: scaleX(1);
+        }
+
+        .project-card-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 1rem;
+        }
+
+        .project-name {
+          font-size: 1.25rem;
+          font-weight: 600;
+          margin-bottom: 0.5rem;
+        }
+
+        .project-meta {
+          color: var(--text-secondary);
+          font-size: 0.875rem;
+          margin-bottom: 0.25rem;
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+        }
+
+        .project-sites-count {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          background: var(--bg-quaternary);
+          padding: 0.25rem 0.75rem;
+          border-radius: 8px;
+          font-size: 0.75rem;
+          color: var(--text-secondary);
+          margin-top: 0.75rem;
+        }
+
+        .project-actions {
+          display: flex;
+          gap: 0.5rem;
+        }
+
+        .icon-btn {
+          background: var(--bg-quaternary);
+          border: none;
+          border-radius: 8px;
+          padding: 0.5rem;
+          cursor: pointer;
+          color: var(--text-secondary);
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .icon-btn:hover {
+          background: var(--bg-tertiary);
+          color: var(--text-primary);
+        }
+
+        .empty-state {
+          text-align: center;
+          padding: 4rem 2rem;
+          animation: fadeIn 0.6s ease-out;
+        }
+
+        .empty-icon {
+          width: 80px;
+          height: 80px;
+          margin: 0 auto 1.5rem;
+          opacity: 0.5;
+          color: var(--text-tertiary);
+        }
+
+        .empty-title {
+          font-size: 1.5rem;
+          font-weight: 600;
+          margin-bottom: 0.5rem;
+        }
+
+        .empty-description {
+          color: var(--text-secondary);
+          margin-bottom: 2rem;
+        }
+
+        .form-group {
+          margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: 500;
+          color: var(--text-secondary);
+          font-size: 0.875rem;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .form-input {
+          width: 100%;
+          background: var(--bg-tertiary);
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          padding: 0.75rem 1rem;
+          color: var(--text-primary);
+          font-size: 1rem;
+          font-family: 'Outfit', sans-serif;
+          transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+          outline: none;
+          border-color: var(--primary);
+          box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.1);
+        }
+
+        .form-input::placeholder {
+          color: var(--text-tertiary);
+        }
+
+        .project-detail {
+          animation: fadeIn 0.5s ease-out;
+        }
+
+        .detail-header {
+          background: rgba(28, 28, 30, 0.8);
+          backdrop-filter: blur(10px);
+          border: 1px solid var(--border);
+          border-radius: 16px;
+          padding: 2rem;
+          margin-bottom: 2rem;
+        }
+
+        .detail-title {
+          font-size: 2rem;
+          font-weight: 700;
+          margin-bottom: 1.5rem;
+        }
+
+        .detail-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 1.5rem;
+        }
+
+        .sites-section {
+          margin-top: 2rem;
+        }
+
+        .section-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+          font-size: 1.5rem;
+          font-weight: 600;
+        }
+
+        .sites-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+          gap: 1rem;
+        }
+
+        .site-card {
+          background: rgba(28, 28, 30, 0.8);
+          backdrop-filter: blur(10px);
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          padding: 1.25rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          position: relative;
+        }
+
+        .site-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px var(--shadow);
+          border-color: var(--secondary);
+        }
+
+        .site-name {
+          font-weight: 600;
+          margin-bottom: 0.5rem;
+          font-size: 1.1rem;
+        }
+
+        .site-info {
+          color: var(--text-secondary);
+          font-size: 0.875rem;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .site-detail {
+          animation: fadeIn 0.5s ease-out;
+        }
+
+        .data-collection {
+          background: rgba(28, 28, 30, 0.8);
+          backdrop-filter: blur(10px);
+          border: 1px solid var(--border);
+          border-radius: 16px;
+          padding: 2rem;
+          margin-bottom: 2rem;
+        }
+
+        .camera-section {
+          background: var(--bg-tertiary);
+          border: 2px dashed var(--border);
+          border-radius: 12px;
+          padding: 2rem;
+          text-align: center;
+          margin-bottom: 2rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .camera-section:hover {
+          border-color: var(--primary);
+          background: var(--bg-quaternary);
+        }
+
+        .camera-icon {
+          width: 48px;
+          height: 48px;
+          margin: 0 auto 1rem;
+          color: var(--primary);
+        }
+
+        .map-container {
+          background: var(--bg-tertiary);
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          padding: 2rem;
+          margin-top: 2rem;
+          text-align: center;
+        }
+
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.8);
+          backdrop-filter: blur(4px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal {
+          background: var(--bg-secondary);
+          border: 1px solid var(--border);
+          border-radius: 16px;
+          padding: 2rem;
+          max-width: 600px;
+          width: 90%;
+          max-height: 90vh;
+          overflow-y: auto;
+          animation: scaleIn 0.3s ease-out;
+        }
+
+        @keyframes scaleIn {
+          from {
+            transform: scale(0.9);
+            opacity: 0;
+          }
+          to {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+
+        .modal-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+          font-size: 1.5rem;
+          font-weight: 600;
+        }
+
+        .spreadsheet-preview {
+          background: var(--bg-tertiary);
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          padding: 1.5rem;
+          margin-top: 1rem;
+          overflow-x: auto;
+        }
+
+        .spreadsheet-table {
+          width: 100%;
+          border-collapse: collapse;
+          font-family: 'JetBrains Mono', monospace;
+          font-size: 0.875rem;
+        }
+
+        .spreadsheet-table th,
+        .spreadsheet-table td {
+          padding: 0.75rem;
+          text-align: left;
+          border-bottom: 1px solid var(--border);
+        }
+
+        .spreadsheet-table th {
+          background: var(--bg-quaternary);
+          font-weight: 600;
+          text-transform: uppercase;
+          font-size: 0.75rem;
+          letter-spacing: 0.5px;
+        }
+
+        .spreadsheet-table tr:hover {
+          background: var(--bg-quaternary);
+        }
+
+        input[type="file"] {
+          display: none;
+        }
+
+        .badge {
+          display: inline-block;
+          background: var(--primary);
+          color: white;
+          padding: 0.25rem 0.75rem;
+          border-radius: 6px;
+          font-size: 0.75rem;
+          font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+          .main-content {
+            padding: 1rem;
+          }
+
+          .header-title {
+            font-size: 1.25rem;
+          }
+
+          .projects-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .detail-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .sites-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
+
+      <Header
+        onCreateProject={createProject}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        showMenu={showMenu}
+        setShowMenu={setShowMenu}
+        theme={theme}
+        setTheme={setTheme}
+      />
+
+      <div className="main-content">
+        <Breadcrumb
+          currentView={currentView}
+          selectedProject={selectedProject}
+          selectedSite={selectedSite}
+          selectedAsset={selectedAsset}
+          setCurrentView={setCurrentView}
+          setSelectedProject={setSelectedProject}
+          setSelectedSite={setSelectedSite}
+          setSelectedAsset={setSelectedAsset}
+        />
+
+        {currentView === 'home' && (
+          <HomeView
+            projects={projects.filter(p => 
+              p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              p.address.toLowerCase().includes(searchTerm.toLowerCase())
+            )}
+            onSelectProject={(project) => {
+              setSelectedProject(project);
+              setCurrentView('project');
+            }}
+            onDeleteProject={deleteProject}
+            onCreateProject={createProject}
+          />
+        )}
+
+        {currentView === 'project' && selectedProject && (
+          <ProjectView
+            project={selectedProject}
+            onUpdate={updateProject}
+            onAddSite={() => addSite(selectedProject)}
+            onSelectSite={(site) => {
+              setSelectedSite(site);
+              setCurrentView('site');
+            }}
+            onDeleteSite={(siteId) => deleteSite(selectedProject, siteId)}
+            onBack={() => {
+              setSelectedProject(null);
+              setCurrentView('home');
+            }}
+          />
+        )}
+
+        {currentView === 'site' && selectedProject && selectedSite && (
+          <SiteView
+            project={selectedProject}
+            site={selectedSite}
+            onUpdate={(updatedSite) => updateSite(selectedProject, selectedSite.id, updatedSite)}
+            onAddAsset={() => addAsset(selectedProject, selectedSite)}
+            onSelectAsset={(asset) => {
+              setSelectedAsset(asset);
+              setCurrentView('asset');
+            }}
+            onDeleteAsset={(assetId) => deleteAsset(selectedProject, selectedSite, assetId)}
+            onDeleteSite={(siteId) => deleteSite(selectedProject, siteId)}
+            onBack={() => {
+              setSelectedSite(null);
+              setCurrentView('project');
+            }}
+          />
+        )}
+
+        {currentView === 'asset' && selectedProject && selectedSite && selectedAsset && (
+          <AssetView
+            project={selectedProject}
+            site={selectedSite}
+            asset={selectedAsset}
+            onUpdate={(updatedAsset) => updateAsset(selectedProject, selectedSite, selectedAsset.id, updatedAsset)}
+            onBack={() => {
+              setSelectedAsset(null);
+              setCurrentView('site');
+            }}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Header Component
+function Header({ onCreateProject, searchTerm, setSearchTerm, showMenu, setShowMenu, theme, setTheme }) {
+  const [showThemeMenu, setShowThemeMenu] = useState(false);
+  
+  const themes = [
+    { id: 'dark', name: '🌙 Dark', color: '#0a84ff' },
+    { id: 'light', name: '☀️ Light', color: '#007aff' },
+    { id: 'blue', name: '💙 Blue', color: '#5ac8fa' },
+    { id: 'green', name: '💚 Green', color: '#30d158' },
+    { id: 'purple', name: '💜 Purple', color: '#bf5af2' },
+    { id: 'ocean', name: '🌊 Ocean', color: '#00bcd4' }
+  ];
+
+  return (
+    <header className="header">
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <button className="btn btn-icon" onClick={() => setShowMenu(!showMenu)}>
+          {showMenu ? <X size={20} /> : <Menu size={20} />}
+        </button>
+        <h1 className="header-title">ProjectData</h1>
+      </div>
+      
+      <div className="header-actions">
+        <div className="search-box">
+          <Search className="search-icon" size={16} />
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search projects..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        
+        {/* Theme Selector */}
+        <div style={{ position: 'relative' }}>
+          <button 
+            className="btn" 
+            onClick={() => setShowThemeMenu(!showThemeMenu)}
+            title="Change Theme"
+          >
+            🎨
+          </button>
+          
+          {showThemeMenu && (
+            <div style={{
+              position: 'absolute',
+              top: '100%',
+              right: 0,
+              marginTop: '0.5rem',
+              background: 'var(--bg-tertiary)',
+              border: '1px solid var(--border)',
+              borderRadius: '12px',
+              padding: '0.5rem',
+              minWidth: '150px',
+              boxShadow: '0 4px 12px var(--shadow)',
+              zIndex: 1000
+            }}>
+              {themes.map(t => (
+                <button
+                  key={t.id}
+                  onClick={() => {
+                    setTheme(t.id);
+                    setShowThemeMenu(false);
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    background: theme === t.id ? 'var(--bg-quaternary)' : 'transparent',
+                    border: 'none',
+                    borderRadius: '8px',
+                    color: 'var(--text-primary)',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    fontSize: '0.875rem',
+                    marginBottom: '0.25rem'
+                  }}
+                >
+                  <span style={{ 
+                    width: '12px', 
+                    height: '12px', 
+                    borderRadius: '50%', 
+                    background: t.color,
+                    border: '2px solid var(--bg-primary)'
+                  }}></span>
+                  {t.name}
+                  {theme === t.id && ' ✓'}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        
+        {/* Backup/Restore Buttons */}
+        <button 
+          className="btn" 
+          onClick={() => {
+            // Backup all localStorage data
+            const data = {};
+            for (let i = 0; i < localStorage.length; i++) {
+              const key = localStorage.key(i);
+              data[key] = localStorage.getItem(key);
+            }
+            const dataStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `projectdata-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            alert('✓ Backup downloaded!');
+          }}
+          title="Backup All Data"
+        >
+          💾 Backup
+        </button>
+        
+        <button 
+          className="btn" 
+          onClick={() => {
+            // Create file input for restore
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+            input.onchange = (e) => {
+              const file = e.target.files[0];
+              if (!file) return;
+              
+              if (!confirm('This will replace all current data. Continue?')) {
+                return;
+              }
+              
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                try {
+                  const data = JSON.parse(e.target.result);
+                  Object.keys(data).forEach(key => {
+                    localStorage.setItem(key, data[key]);
+                  });
+                  alert('✓ Data restored! Reloading page...');
+                  setTimeout(() => window.location.reload(), 500);
+                } catch (error) {
+                  alert('✗ Error restoring data: ' + error.message);
+                }
+              };
+              reader.readAsText(file);
+            };
+            input.click();
+          }}
+          title="Restore Data from Backup"
+        >
+          📥 Restore
+        </button>
+        
+        <button className="btn btn-primary" onClick={onCreateProject}>
+          <Plus size={18} />
+          New Project
+        </button>
+      </div>
+    </header>
+  );
+}
+
+// Breadcrumb Component
+function Breadcrumb({ 
+  currentView, 
+  selectedProject, 
+  selectedSite, 
+  selectedAsset,
+  setCurrentView, 
+  setSelectedProject, 
+  setSelectedSite,
+  setSelectedAsset 
+}) {
+  return (
+    <div className="breadcrumb">
+      <span 
+        className={`breadcrumb-item ${currentView === 'home' ? 'active' : ''}`}
+        onClick={() => {
+          setCurrentView('home');
+          setSelectedProject(null);
+          setSelectedSite(null);
+          setSelectedAsset(null);
+        }}
+      >
+        <Home size={16} />
+        Projects
+      </span>
+      
+      {selectedProject && (
+        <>
+          <ChevronRight size={16} />
+          <span 
+            className={`breadcrumb-item ${currentView === 'project' ? 'active' : ''}`}
+            onClick={() => {
+              setCurrentView('project');
+              setSelectedSite(null);
+              setSelectedAsset(null);
+            }}
+          >
+            {selectedProject.name}
+          </span>
+        </>
+      )}
+      
+      {selectedSite && (
+        <>
+          <ChevronRight size={16} />
+          <span 
+            className={`breadcrumb-item ${currentView === 'site' ? 'active' : ''}`}
+            onClick={() => {
+              setCurrentView('site');
+              setSelectedAsset(null);
+            }}
+          >
+            {selectedSite.name}
+          </span>
+        </>
+      )}
+
+      {selectedAsset && (
+        <>
+          <ChevronRight size={16} />
+          <span className="breadcrumb-item active">
+            {selectedAsset.name}
+          </span>
+        </>
+      )}
+    </div>
+  );
+}
+
+// Home View Component
+function HomeView({ projects, onSelectProject, onDeleteProject, onCreateProject }) {
+  if (projects.length === 0) {
+    return (
+      <div className="empty-state">
+        <FolderOpen className="empty-icon" />
+        <h2 className="empty-title">No Projects Yet</h2>
+        <p className="empty-description">Create your first project to get started with data collection</p>
+        <button className="btn btn-primary" onClick={onCreateProject}>
+          <Plus size={18} />
+          Create First Project
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="projects-grid">
+      {projects.map(project => (
+        <div key={project.id} className="project-card" onClick={() => onSelectProject(project)}>
+          <div className="project-card-header">
+            <div style={{ flex: 1 }}>
+              <h3 className="project-name">{project.name}</h3>
+              {project.address && (
+                <div className="project-meta">
+                  <MapPin size={14} />
+                  {project.address}
+                </div>
+              )}
+              {project.gateCode && (
+                <div className="project-meta">Gate Code: {project.gateCode}</div>
+              )}
+              <div className="project-sites-count">
+                <FolderOpen size={14} />
+                {project.sites.length} Sites
+              </div>
+            </div>
+            <div className="project-actions" onClick={(e) => e.stopPropagation()}>
+              <button 
+                className="icon-btn"
+                onClick={() => onDeleteProject(project.id)}
+                title="Delete project"
+              >
+                <Trash2 size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Project View Component
+function ProjectView({ project, onUpdate, onAddSite, onSelectSite, onDeleteSite, onBack }) {
+  const [editing, setEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    name: project.name,
+    address: project.address,
+    gateCode: project.gateCode,
+    keyNumber: project.keyNumber
+  });
+  const [showExport, setShowExport] = useState(false);
+  const [uploadedTemplate, setUploadedTemplate] = useState(null);
+  const [exportMode, setExportMode] = useState('all'); // 'all', 'single', 'range'
+  const [exportMonth, setExportMonth] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  });
+  const [exportRange, setExportRange] = useState({ start: '', end: '' });
+  const templateInputRef = useRef(null);
+
+  const handleSave = () => {
+    onUpdate({ ...project, ...formData });
+    setEditing(false);
+  };
+
+  const handleTemplateUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Read file as base64 for storage
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64 = event.target.result;
+        setUploadedTemplate({
+          name: file.name,
+          data: base64,
+          uploadedAt: new Date().toISOString()
+        });
+        
+        // Save to localStorage for persistence
+        localStorage.setItem(`template:${project.id}`, JSON.stringify({
+          name: file.name,
+          data: base64,
+          uploadedAt: new Date().toISOString()
+        }));
+        
+        alert(`Template uploaded: ${file.name}\n\nThis will be available for future exports.`);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const exportConsolidated = async () => {
+    // Helper to get date range including next month's first day
+    const getDateRange = (startMonth, endMonth) => {
+      const dates = [];
+      let current = new Date(startMonth + '-01');
+      const end = new Date(endMonth + '-01');
+      end.setMonth(end.getMonth() + 1); // Include next month
+      end.setDate(1); // First day of next month
+      
+      while (current <= end) {
+        dates.push(current.toISOString().split('T')[0]);
+        current.setDate(current.getDate() + 1);
+      }
+      return dates;
+    };
+    
+    // Get date range based on export mode
+    let dateRange = [];
+    if (exportMode === 'all') {
+      // Get all unique dates from data + fill gaps
+      const allDates = new Set();
+      project.sites?.forEach(site => {
+        site.assets?.forEach(asset => {
+          asset.spreadsheet?.forEach(row => {
+            allDates.add(row.date);
+          });
+        });
+      });
+      const sorted = Array.from(allDates).sort();
+      if (sorted.length > 0) {
+        const firstDate = new Date(sorted[0]);
+        const lastDate = new Date(sorted[sorted.length - 1]);
+        lastDate.setDate(lastDate.getDate() + 1); // Add one more day
+        dateRange = getDateRange(
+          firstDate.toISOString().substring(0, 7),
+          lastDate.toISOString().substring(0, 7)
+        );
+      }
+    } else if (exportMode === 'single') {
+      const startDate = new Date(exportMonth + '-01');
+      const endDate = new Date(exportMonth + '-01');
+      endDate.setMonth(endDate.getMonth() + 1);
+      dateRange = getDateRange(exportMonth, endDate.toISOString().substring(0, 7));
+    } else if (exportMode === 'range') {
+      if (exportRange.start && exportRange.end) {
+        const endDate = new Date(exportRange.end + '-01');
+        endDate.setMonth(endDate.getMonth() + 1);
+        dateRange = getDateRange(exportRange.start, endDate.toISOString().substring(0, 7));
+      }
+    }
+    
+    if (dateRange.length === 0) {
+      alert('No date range to export.');
+      return;
+    }
+    
+    // Collect all data organized by site/asset/date
+    const allData = [];
+    
+    project.sites?.forEach(site => {
+      site.assets?.forEach(asset => {
+        // Create a map of existing data by date
+        const dataByDate = {};
+        (asset.spreadsheet || []).forEach(row => {
+          dataByDate[row.date] = row;
+        });
+        
+        // Generate rows for all dates (including empty ones)
+        dateRange.forEach(date => {
+          const row = dataByDate[date] || {
+            date: date,
+            time: '',
+            timestamp: new Date(date).toISOString(),
+            columns: {}
+          };
+          
+          const dataRow = {
+            project: project.name,
+            site: site.name,
+            asset: asset.name,
+            date: date,
+            time: row.time || '',
+            timestamp: row.timestamp,
+            rawData: {},
+            calculatedData: {},
+            columnDefs: {}
+          };
+          
+          // Add column values
+          asset.columns?.forEach(col => {
+            const colData = row.columns?.[col.id];
+            const colValue = colData?.value;
+            
+            // Check if it's a ratio (contains /)
+            const isRatio = typeof colValue === 'string' && colValue.includes('/');
+            
+            if (isRatio) {
+              // Store ratio as-is, no calculations
+              dataRow.rawData[col.title] = colValue;
+              dataRow.calculatedData[col.title] = colValue;
+            } else {
+              // Numeric value - apply multiplier if exists
+              const rawValue = parseFloat(colValue) || 0;
+              const multiplier = parseFloat(col.multiplier) || null;
+              const calculatedValue = multiplier ? rawValue * multiplier : rawValue;
+              
+              dataRow.rawData[col.title] = rawValue;
+              dataRow.calculatedData[col.title] = calculatedValue;
+            }
+            
+            dataRow.columnDefs[col.title] = {
+              unit: col.unit,
+              multiplier: isRatio ? null : (parseFloat(col.multiplier) || null),
+              calculations: col.calculations || {},
+              isRatio: isRatio
+            };
+          });
+          
+          allData.push(dataRow);
+        });
+      });
+    });
+    
+    // Sort by date
+    allData.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    
+    // Calculate Daily Flow for columns with multipliers
+    const flowCalculations = {};
+    
+    project.sites?.forEach(site => {
+      site.assets?.forEach(asset => {
+        asset.columns?.forEach(col => {
+          if (!col.multiplier || !col.calculations?.dailyFlow) return;
+          
+          const colTitle = col.title;
+          const assetRows = allData.filter(r => r.asset === asset.name && r.site === site.name);
+          
+          assetRows.forEach((row, idx) => {
+            if (idx < assetRows.length - 1) {
+              const today = row.calculatedData[colTitle] || 0;
+              const tomorrow = assetRows[idx + 1].calculatedData[colTitle] || 0;
+              const dailyFlow = tomorrow - today;
+              
+              if (!flowCalculations[row.date]) flowCalculations[row.date] = {};
+              if (!flowCalculations[row.date][row.asset]) flowCalculations[row.date][row.asset] = {};
+              flowCalculations[row.date][row.asset][colTitle] = dailyFlow;
+            }
+          });
+        });
+      });
+    });
+    
+    // Calculate Monthly Totals
+    const monthlyTotals = {};
+    allData.forEach(row => {
+      const month = row.date.substring(0, 7);
+      if (!monthlyTotals[month]) monthlyTotals[month] = {};
+      if (!monthlyTotals[month][row.asset]) monthlyTotals[month][row.asset] = {};
+      
+      Object.keys(row.columnDefs).forEach(colTitle => {
+        const colDef = row.columnDefs[colTitle];
+        if (!colDef.calculations?.monthlyTotal) return;
+        
+        if (!monthlyTotals[month][row.asset][colTitle]) {
+          monthlyTotals[month][row.asset][colTitle] = 0;
+        }
+        
+        // For flow meters, sum daily flows; for others, sum values
+        if (colDef.multiplier && colDef.calculations?.dailyFlow) {
+          const dailyFlow = flowCalculations[row.date]?.[row.asset]?.[colTitle] || 0;
+          monthlyTotals[month][row.asset][colTitle] += dailyFlow;
+        } else {
+          monthlyTotals[month][row.asset][colTitle] += row.calculatedData[colTitle] || 0;
+        }
+      });
+    });
+    
+    // Calculate Monthly Averages
+    const monthlyAverages = {};
+    const monthlyCounts = {};
+    
+    allData.forEach(row => {
+      const month = row.date.substring(0, 7);
+      if (!monthlyAverages[month]) monthlyAverages[month] = {};
+      if (!monthlyAverages[month][row.asset]) monthlyAverages[month][row.asset] = {};
+      if (!monthlyCounts[month]) monthlyCounts[month] = {};
+      if (!monthlyCounts[month][row.asset]) monthlyCounts[month][row.asset] = {};
+      
+      Object.keys(row.columnDefs).forEach(colTitle => {
+        const colDef = row.columnDefs[colTitle];
+        if (!colDef.calculations?.monthlyAverage) return;
+        
+        const value = row.calculatedData[colTitle];
+        if (value && value !== 0) {
+          if (!monthlyAverages[month][row.asset][colTitle]) {
+            monthlyAverages[month][row.asset][colTitle] = 0;
+            monthlyCounts[month][row.asset][colTitle] = 0;
+          }
+          monthlyAverages[month][row.asset][colTitle] += value;
+          monthlyCounts[month][row.asset][colTitle]++;
+        }
+      });
+    });
+    
+    // Finalize averages
+    Object.keys(monthlyAverages).forEach(month => {
+      Object.keys(monthlyAverages[month]).forEach(asset => {
+        Object.keys(monthlyAverages[month][asset]).forEach(col => {
+          const count = monthlyCounts[month][asset][col];
+          if (count > 0) {
+            monthlyAverages[month][asset][col] /= count;
+          }
+        });
+      });
+    });
+    
+    // Build column headers
+    const allColumns = new Set();
+    allData.forEach(row => {
+      Object.keys(row.columnDefs).forEach(col => allColumns.add(col));
+    });
+    const sortedColumns = Array.from(allColumns).sort();
+    
+    // Determine which columns to export
+    const exportColumns = [];
+    sortedColumns.forEach(colTitle => {
+      const sampleRow = allData.find(r => r.columnDefs[colTitle]);
+      if (!sampleRow) return;
+      
+      const colDef = sampleRow.columnDefs[colTitle];
+      
+      if (colDef.multiplier) {
+        // Flow meter: raw, calculated, daily flow
+        exportColumns.push({ name: `${colTitle} (raw)`, type: 'raw', colTitle });
+        exportColumns.push({ name: `${colTitle} (${colDef.unit || 'calculated'})`, type: 'calculated', colTitle });
+        if (colDef.calculations?.dailyFlow) {
+          exportColumns.push({ name: `${colTitle} - Daily Flow`, type: 'dailyFlow', colTitle });
+        }
+      } else {
+        // Regular: just value
+        exportColumns.push({ name: `${colTitle} (${colDef.unit || ''})`, type: 'value', colTitle });
+      }
+      
+      // Add calculation columns
+      if (colDef.calculations?.monthlyTotal) {
+        exportColumns.push({ name: `${colTitle} - Monthly Total`, type: 'monthlyTotal', colTitle });
+      }
+      if (colDef.calculations?.monthlyAverage) {
+        exportColumns.push({ name: `${colTitle} - Monthly Avg`, type: 'monthlyAverage', colTitle });
+      }
+    });
+    
+    // Build CSV
+    const headers = ['Project', 'Site', 'Asset', 'Date', 'Time', ...exportColumns.map(c => c.name)];
+    const csvRows = [headers.join(',')];
+    
+    allData.forEach(row => {
+      const month = row.date.substring(0, 7);
+      const rowData = [
+        `"${row.project}"`,
+        `"${row.site}"`,
+        `"${row.asset}"`,
+        row.date,
+        row.time
+      ];
+      
+      exportColumns.forEach(col => {
+        let value = '';
+        
+        if (col.type === 'raw') {
+          value = row.rawData[col.colTitle] || '';
+        } else if (col.type === 'calculated') {
+          value = row.calculatedData[col.colTitle] || '';
+        } else if (col.type === 'value') {
+          value = row.rawData[col.colTitle] || '';
+        } else if (col.type === 'dailyFlow') {
+          value = flowCalculations[row.date]?.[row.asset]?.[col.colTitle] || '';
+        } else if (col.type === 'monthlyTotal') {
+          value = monthlyTotals[month]?.[row.asset]?.[col.colTitle] || '';
+        } else if (col.type === 'monthlyAverage') {
+          value = monthlyAverages[month]?.[row.asset]?.[col.colTitle] || '';
+        }
+        
+        if (typeof value === 'number') {
+          value = value.toFixed(2);
+        }
+        
+        rowData.push(value);
+      });
+      
+      csvRows.push(rowData.join(','));
+    });
+    
+    // Download
+    const csvContent = csvRows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    
+    let filename = `${project.name}_calculated`;
+    if (exportMode === 'single') filename += `_${exportMonth}`;
+    else if (exportMode === 'range') filename += `_${exportRange.start}_to_${exportRange.end}`;
+    filename += `_${new Date().toISOString().split('T')[0]}.csv`;
+    
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+    setShowExport(false);
+  };
+
+  const exportBySite = async () => {
+    // Export separate CSV for each site (for easy template filling)
+    const siteExports = [];
+    
+    project.sites?.forEach(site => {
+      const siteData = [];
+      
+      site.assets?.forEach(asset => {
+        // Get columns with settings
+        const columnsWithCalcs = {};
+        asset.columns?.forEach(col => {
+          columnsWithCalcs[col.title] = col.calculations || {};
+        });
+        
+        // Filter rows
+        const filteredRows = (asset.spreadsheet || []).filter(row => {
+          const rowDate = new Date(row.timestamp);
+          const rowMonth = `${rowDate.getFullYear()}-${String(rowDate.getMonth() + 1).padStart(2, '0')}`;
+          
+          if (exportMode === 'all') return true;
+          if (exportMode === 'single') return rowMonth === exportMonth;
+          if (exportMode === 'range') {
+            return exportRange.start && exportRange.end && 
+                   rowMonth >= exportRange.start && rowMonth <= exportRange.end;
+          }
+          return false;
+        });
+        
+        filteredRows.forEach(row => {
+          const dataRow = {
+            project: project.name,
+            site: site.name,
+            asset: asset.name,
+            date: row.date,
+            time: row.timestamp,
+            rawData: {}
+          };
+          
+          if (row.columns) {
+            Object.values(row.columns).forEach(colData => {
+              if (colData.title) {
+                dataRow.rawData[colData.title] = parseFloat(colData.value) || 0;
+              }
+            });
+          }
+          
+          siteData.push(dataRow);
+        });
+      });
+      
+      if (siteData.length > 0) {
+        // Calculate for this site
+        siteData.sort((a, b) => new Date(a.time) - new Date(b.time));
+        
+        // Get all column names
+        const allCols = new Set();
+        siteData.forEach(row => Object.keys(row.rawData).forEach(col => allCols.add(col)));
+        const columns = Array.from(allCols).sort();
+        
+        // Do calculations per column
+        columns.forEach(colTitle => {
+          site.assets?.forEach(asset => {
+            const colDef = asset.columns?.find(c => c.title === colTitle);
+            if (!colDef?.calculations) return;
+            
+            const calcs = colDef.calculations;
+            
+            // Daily Totals
+            if (calcs.dailyTotal) {
+              const dailyTotals = {};
+              siteData.forEach(row => {
+                if (row.asset === asset.name && row.rawData[colTitle]) {
+                  const date = row.date;
+                  dailyTotals[date] = (dailyTotals[date] || 0) + row.rawData[colTitle];
+                }
+              });
+              
+              siteData.forEach(row => {
+                if (row.asset === asset.name) {
+                  row.rawData[`${colTitle} - Daily Total`] = dailyTotals[row.date] || 0;
+                }
+              });
+            }
+            
+            // Monthly Totals
+            if (calcs.monthlyTotal) {
+              const monthlyTotals = {};
+              siteData.forEach(row => {
+                if (row.asset === asset.name && row.rawData[colTitle]) {
+                  const month = row.date.substring(0, 7);
+                  monthlyTotals[month] = (monthlyTotals[month] || 0) + row.rawData[colTitle];
+                }
+              });
+              
+              siteData.forEach(row => {
+                if (row.asset === asset.name) {
+                  const month = row.date.substring(0, 7);
+                  row.rawData[`${colTitle} - Monthly Total`] = monthlyTotals[month] || 0;
+                }
+              });
+            }
+            
+            // Monthly Averages
+            if (calcs.monthlyAverage) {
+              const monthlyData = {};
+              siteData.forEach(row => {
+                if (row.asset === asset.name && row.rawData[colTitle]) {
+                  const month = row.date.substring(0, 7);
+                  if (!monthlyData[month]) monthlyData[month] = [];
+                  monthlyData[month].push(row.rawData[colTitle]);
+                }
+              });
+              
+              const monthlyAvgs = {};
+              Object.keys(monthlyData).forEach(month => {
+                const values = monthlyData[month];
+                monthlyAvgs[month] = values.reduce((a, b) => a + b, 0) / values.length;
+              });
+              
+              siteData.forEach(row => {
+                if (row.asset === asset.name) {
+                  const month = row.date.substring(0, 7);
+                  row.rawData[`${colTitle} - Monthly Avg`] = monthlyAvgs[month] || 0;
+                }
+              });
+            }
+          });
+        });
+        
+        siteExports.push({ siteName: site.name, data: siteData });
+      }
+    });
+    
+    if (siteExports.length === 0) {
+      alert('No data to export.');
+      return;
+    }
+    
+    // Create separate CSV for each site
+    siteExports.forEach(({ siteName, data }) => {
+      const allColumns = new Set();
+      data.forEach(row => Object.keys(row.rawData).forEach(col => allColumns.add(col)));
+      const sortedColumns = Array.from(allColumns).sort();
+      
+      const headers = ['Project', 'Site', 'Asset', 'Date', 'Time', ...sortedColumns];
+      const csvRows = [headers.join(',')];
+      
+      data.forEach(row => {
+        const rowData = [
+          `"${row.project}"`,
+          `"${row.site}"`,
+          `"${row.asset}"`,
+          row.date,
+          row.time
+        ];
+        
+        sortedColumns.forEach(col => {
+          const val = row.rawData[col];
+          rowData.push(typeof val === 'number' ? val.toFixed(2) : (val || ''));
+        });
+        
+        csvRows.push(rowData.join(','));
+      });
+      
+      const csvContent = csvRows.join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${siteName.replace(/[^a-z0-9]/gi, '_')}_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+    
+    alert(`Exported ${siteExports.length} site file(s)!`);
+    setShowExport(false);
+  };
+
+  return (
+    <div className="project-detail">
+      <div className="detail-header">
+        <button className="btn" onClick={onBack} style={{ marginBottom: '1rem' }}>
+          ← Back to Projects
+        </button>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
+          <h2 className="detail-title">{project.name}</h2>
+          <button className="btn" onClick={() => setEditing(!editing)}>
+            <Edit2 size={16} />
+            {editing ? 'Cancel' : 'Edit'}
+          </button>
+        </div>
+
+        {editing ? (
+          <div className="detail-grid">
+            <div className="form-group">
+              <label className="form-label">Project Name</label>
+              <input
+                type="text"
+                className="form-input"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="e.g., Country Woods"
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Address / Location</label>
+              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={formData.address}
+                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                  placeholder="Address, Plus Code, or Coordinates"
+                  style={{ flex: 1 }}
+                />
+                {formData.address && (
+                  <button 
+                    type="button"
+                    className="icon-btn" 
+                    onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(formData.address)}`, '_blank')}
+                    title="Open in Google Maps"
+                  >
+                    🗺️
+                  </button>
+                )}
+              </div>
+              <button 
+                type="button"
+                className="btn" 
+                onClick={() => {
+                  if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                      (position) => {
+                        const coords = `${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`;
+                        setFormData({ ...formData, address: coords });
+                      },
+                      (error) => {
+                        alert('Unable to get location. Please enable location services.');
+                      }
+                    );
+                  } else {
+                    alert('Geolocation is not supported by your browser.');
+                  }
+                }}
+                style={{ width: '100%', fontSize: '0.875rem' }}
+              >
+                📍 Drop Pin at Current Location
+              </button>
+            </div>
+            <div className="form-group">
+              <label className="form-label">Gate Code</label>
+              <input
+                type="text"
+                className="form-input"
+                value={formData.gateCode}
+                onChange={(e) => setFormData({ ...formData, gateCode: e.target.value })}
+                placeholder="Gate access code"
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Key Number</label>
+              <input
+                type="text"
+                className="form-input"
+                value={formData.keyNumber}
+                onChange={(e) => setFormData({ ...formData, keyNumber: e.target.value })}
+                placeholder="Key number"
+              />
+            </div>
+            <div style={{ gridColumn: '1 / -1' }}>
+              <button className="btn btn-primary" onClick={handleSave}>
+                <Check size={16} />
+                Save Changes
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="detail-grid">
+            {project.address && (
+              <div>
+                <div className="form-label">Address</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <div className="project-meta">
+                    <MapPin size={16} />
+                    {project.address}
+                  </div>
+                  <button 
+                    className="icon-btn" 
+                    onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(project.address)}`, '_blank')}
+                    title="Open in Google Maps"
+                  >
+                    🗺️
+                  </button>
+                </div>
+              </div>
+            )}
+            {project.gateCode && (
+              <div>
+                <div className="form-label">Gate Code</div>
+                <div style={{ fontFamily: "'JetBrains Mono', monospace" }}>{project.gateCode}</div>
+              </div>
+            )}
+            {project.keyNumber && (
+              <div>
+                <div className="form-label">Key Number</div>
+                <div style={{ fontFamily: "'JetBrains Mono', monospace" }}>{project.keyNumber}</div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Export Section */}
+      <div style={{ marginBottom: '2rem' }}>
+        <button 
+          className="btn btn-primary" 
+          onClick={() => setShowExport(!showExport)}
+          style={{ width: '100%', padding: '1rem', justifyContent: 'center' }}
+        >
+          <Download size={16} />
+          Export All Project Data
+        </button>
+
+        {showExport && (
+          <div style={{ 
+            marginTop: '1rem',
+            padding: '1.5rem',
+            background: 'var(--bg-tertiary)',
+            borderRadius: '12px',
+            border: '1px solid var(--border)'
+          }}>
+            <h4 style={{ marginBottom: '1rem', fontWeight: '600' }}>Export Options</h4>
+            
+            {/* Template Upload */}
+            <div style={{ marginBottom: '1.5rem', paddingBottom: '1.5rem', borderBottom: '1px solid var(--border)' }}>
+              <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
+                Upload Excel Template (Optional)
+              </div>
+              <input
+                ref={templateInputRef}
+                type="file"
+                accept=".xlsx,.xls"
+                onChange={handleTemplateUpload}
+                style={{ display: 'none' }}
+              />
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                <button 
+                  className="btn" 
+                  onClick={() => templateInputRef.current?.click()}
+                  style={{ flex: 1 }}
+                >
+                  📁 Choose Template File
+                </button>
+                {uploadedTemplate && (
+                  <div style={{ fontSize: '0.875rem', color: 'var(--success)' }}>
+                    ✓ {uploadedTemplate.name}
+                  </div>
+                )}
+              </div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', marginTop: '0.5rem' }}>
+                Upload an Excel file with formulas/calculations. Data will be added to it.
+              </div>
+            </div>
+
+            {/* Export Button */}
+            <div style={{ marginBottom: '1.5rem', paddingBottom: '1.5rem', borderBottom: '1px solid var(--border)' }}>
+              <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
+                Export Time Period
+              </div>
+              
+              {/* Export Mode Selection */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                  <input
+                    type="radio"
+                    name="exportMode"
+                    value="all"
+                    checked={exportMode === 'all'}
+                    onChange={(e) => setExportMode(e.target.value)}
+                  />
+                  <span>All Data (Entire Database)</span>
+                </label>
+                
+                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                  <input
+                    type="radio"
+                    name="exportMode"
+                    value="single"
+                    checked={exportMode === 'single'}
+                    onChange={(e) => setExportMode(e.target.value)}
+                  />
+                  <span>Single Month</span>
+                </label>
+                
+                {exportMode === 'single' && (
+                  <div style={{ marginLeft: '1.5rem' }}>
+                    <input
+                      type="month"
+                      className="form-input"
+                      value={exportMonth}
+                      onChange={(e) => setExportMonth(e.target.value)}
+                      style={{ marginBottom: 0 }}
+                    />
+                  </div>
+                )}
+                
+                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                  <input
+                    type="radio"
+                    name="exportMode"
+                    value="range"
+                    checked={exportMode === 'range'}
+                    onChange={(e) => setExportMode(e.target.value)}
+                  />
+                  <span>Date Range</span>
+                </label>
+                
+                {exportMode === 'range' && (
+                  <div style={{ marginLeft: '1.5rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                    <div>
+                      <label style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '0.25rem' }}>From</label>
+                      <input
+                        type="month"
+                        className="form-input"
+                        value={exportRange.start}
+                        onChange={(e) => setExportRange({ ...exportRange, start: e.target.value })}
+                        style={{ marginBottom: 0 }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '0.25rem' }}>To</label>
+                      <input
+                        type="month"
+                        className="form-input"
+                        value={exportRange.end}
+                        onChange={(e) => setExportRange({ ...exportRange, end: e.target.value })}
+                        style={{ marginBottom: 0 }}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
+                {uploadedTemplate ? 'Export with Calculations' : 'Export with Calculations'}
+              </div>
+              <div style={{ display: 'grid', gap: '0.5rem' }}>
+                <button 
+                  className="btn btn-primary" 
+                  onClick={exportConsolidated}
+                  style={{ width: '100%' }}
+                >
+                  <FileSpreadsheet size={16} />
+                  Export All (Single File)
+                </button>
+                <button 
+                  className="btn" 
+                  onClick={exportBySite}
+                  style={{ width: '100%' }}
+                >
+                  <FileSpreadsheet size={16} />
+                  Export by Site (Separate Files)
+                </button>
+              </div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)', marginTop: '0.5rem' }}>
+                "By Site" creates one file per site - perfect for copying into your template sheets!
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="sites-section">
+        <div className="section-header">
+          <h3 className="section-title">Sites</h3>
+          <button className="btn btn-primary" onClick={onAddSite}>
+            <Plus size={16} />
+            Add Site
+          </button>
+        </div>
+
+        {project.sites.length === 0 ? (
+          <div className="empty-state" style={{ padding: '2rem' }}>
+            <p className="empty-description">No sites added yet. Click "Add Site" to create one (e.g., WWTP, WTP #1).</p>
+          </div>
+        ) : (
+          <div className="sites-grid">
+            {project.sites.map(site => (
+              <div key={site.id} className="site-card" onClick={() => onSelectSite(site)}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                  <div style={{ flex: 1 }}>
+                    <div className="site-name">{site.name}</div>
+                    {site.address && (
+                      <div className="site-info">
+                        <MapPin size={14} />
+                        {site.address}
+                      </div>
+                    )}
+                    <div className="site-info">
+                      <FileSpreadsheet size={14} />
+                      {(site.assets || []).length} assets
+                    </div>
+                  </div>
+                  <button
+                    className="icon-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDeleteSite(site.id);
+                    }}
+                    title="Delete site"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Site View Component (Now shows assets instead of data)
+function SiteView({ project, site, onUpdate, onAddAsset, onSelectAsset, onDeleteAsset, onDeleteSite, onBack }) {
+  const [editing, setEditing] = useState(site.isNew === true); // Auto-edit if new site
+  const [formData, setFormData] = useState({
+    name: site.isNew ? '' : site.name, // Empty for new sites
+    address: site.address || '',
+    gateCode: site.gateCode || '',
+    keyNumber: site.keyNumber || ''
+  });
+  const [copiedAsset, setCopiedAsset] = useState(null);
+  const [pasteDialogOpen, setPasteDialogOpen] = useState(false);
+  const [pasteFormData, setPasteFormData] = useState(null);
+
+  // Handle Enter key for paste dialog
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.key === 'Enter' && pasteDialogOpen) {
+        e.preventDefault();
+        handleSavePastedAsset();
+      }
+    };
+    
+    if (pasteDialogOpen) {
+      window.addEventListener('keydown', handleKeyPress);
+      return () => window.removeEventListener('keydown', handleKeyPress);
+    }
+  }, [pasteDialogOpen, pasteFormData]);
+
+  const handleSave = () => {
+    const { isNew, ...siteData } = { ...site, ...formData }; // Remove isNew flag
+    onUpdate(siteData);
+    setEditing(false);
+  };
+
+  const handleCopyAsset = (asset) => {
+    // Check for duplicate name
+    let newName = asset.name;
+    const baseName = asset.name.replace(/ \(copy\)$/, ''); // Remove existing (copy) if present
+    const isDuplicate = site.assets?.some(a => a.name === baseName);
+    
+    if (isDuplicate) {
+      // Just add (copy) suffix
+      newName = `${baseName} (copy)`;
+    }
+    
+    setCopiedAsset({
+      ...asset,
+      id: Date.now().toString(),
+      name: newName
+    });
+    
+    // Open paste dialog for editing
+    setPasteFormData({
+      ...asset,
+      id: Date.now().toString(),
+      name: newName
+    });
+    setPasteDialogOpen(true);
+  };
+
+  const handlePasteAsset = () => {
+    if (!copiedAsset) {
+      alert('No asset copied');
+      return;
+    }
+
+    // Check for duplicate name
+    const isDuplicate = site.assets?.some(a => a.name === copiedAsset.name);
+    let newName = copiedAsset.name;
+    
+    if (isDuplicate) {
+      let counter = 2;
+      while (site.assets?.some(a => a.name === `${copiedAsset.name} (${counter})`)) {
+        counter++;
+      }
+      newName = `${copiedAsset.name} (${counter})`;
+    }
+
+    // Create paste form data
+    setPasteFormData({
+      ...copiedAsset,
+      id: Date.now().toString(),
+      name: newName,
+      data: [], // Clear data entries
+      spreadsheet: [] // Clear spreadsheet
+    });
+    setPasteDialogOpen(true);
+  };
+
+  const handleSavePastedAsset = () => {
+    // Check if name is unique (case-insensitive)
+    const isDuplicate = site.assets?.some(a => 
+      a.name.trim().toLowerCase() === pasteFormData.name.trim().toLowerCase() && 
+      a.id !== pasteFormData.id
+    );
+    
+    if (isDuplicate) {
+      alert('An asset with this name already exists in this site. Please choose a different name.');
+      return;
+    }
+
+    const updatedSite = {
+      ...site,
+      assets: [...(site.assets || []), pasteFormData]
+    };
+    
+    onUpdate(updatedSite);
+    setPasteDialogOpen(false);
+    setPasteFormData(null);
+    
+    // Navigate to the duplicated asset
+    onSelectAsset(pasteFormData);
+  };
+
+  return (
+    <div className="site-detail">
+      <div className="detail-header">
+        <button className="btn" onClick={onBack} style={{ marginBottom: '1rem' }}>
+          ← Back to {project.name}
+        </button>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
+          <h2 className="detail-title">{site.name}</h2>
+          <button className="btn" onClick={() => setEditing(!editing)}>
+            <Edit2 size={16} />
+            {editing ? 'Cancel' : 'Edit'}
+          </button>
+        </div>
+
+        {editing ? (
+          <div className="detail-grid">
+            <div className="form-group">
+              <label className="form-label">Site Name</label>
+              <input
+                type="text"
+                className="form-input"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="e.g., WWTP, WTP #1"
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Address/Location</label>
+              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={formData.address}
+                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                  placeholder="Address, Plus Code, or Coordinates"
+                  style={{ flex: 1 }}
+                />
+                {formData.address && (
+                  <button 
+                    type="button"
+                    className="icon-btn" 
+                    onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(formData.address)}`, '_blank')}
+                    title="Open in Google Maps"
+                  >
+                    🗺️
+                  </button>
+                )}
+              </div>
+              <button 
+                type="button"
+                className="btn" 
+                onClick={() => {
+                  if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                      (position) => {
+                        const coords = `${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`;
+                        setFormData({ ...formData, address: coords });
+                      },
+                      (error) => {
+                        alert('Unable to get location. Please enable location services.');
+                      }
+                    );
+                  } else {
+                    alert('Geolocation is not supported by your browser.');
+                  }
+                }}
+                style={{ width: '100%', fontSize: '0.875rem' }}
+              >
+                📍 Drop Pin at Current Location
+              </button>
+            </div>
+            <div className="form-group">
+              <label className="form-label">Gate Code</label>
+              <input
+                type="text"
+                className="form-input"
+                value={formData.gateCode}
+                onChange={(e) => setFormData({ ...formData, gateCode: e.target.value })}
+                placeholder="Gate access code"
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Key Number</label>
+              <input
+                type="text"
+                className="form-input"
+                value={formData.keyNumber}
+                onChange={(e) => setFormData({ ...formData, keyNumber: e.target.value })}
+                placeholder="Key number"
+              />
+            </div>
+            <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '1rem' }}>
+              <button className="btn btn-primary" onClick={handleSave} style={{ flex: 1 }}>
+                <Check size={16} />
+                Save Changes
+              </button>
+              <button 
+                className="btn" 
+                onClick={() => {
+                  if (window.confirm(`Are you sure you want to delete "${site.name}"? This will delete all assets and data.`)) {
+                    onDeleteSite(site.id);
+                  }
+                }}
+                style={{ background: 'var(--danger)', color: 'white' }}
+              >
+                <Trash2 size={16} />
+                Delete Site
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="detail-grid">
+            {formData.address && (
+              <div>
+                <div className="form-label">Address</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <div className="project-meta">
+                    <MapPin size={16} />
+                    {formData.address}
+                  </div>
+                  <button 
+                    className="icon-btn" 
+                    onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(formData.address)}`, '_blank')}
+                    title="Open in Google Maps"
+                  >
+                    🗺️
+                  </button>
+                </div>
+              </div>
+            )}
+            {formData.gateCode && (
+              <div>
+                <div className="form-label">Gate Code</div>
+                <div style={{ fontFamily: "'JetBrains Mono', monospace" }}>{formData.gateCode}</div>
+              </div>
+            )}
+            {formData.keyNumber && (
+              <div>
+                <div className="form-label">Key Number</div>
+                <div style={{ fontFamily: "'JetBrains Mono', monospace" }}>{formData.keyNumber}</div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      <div className="sites-section">
+        <div className="section-header">
+          <h3 className="section-title">Assets / Meters</h3>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            {copiedAsset && (
+              <button className="btn" onClick={handlePasteAsset}>
+                📋 Paste
+              </button>
+            )}
+            <button className="btn btn-primary" onClick={onAddAsset}>
+              <Plus size={16} />
+              Add Asset
+            </button>
+          </div>
+        </div>
+
+        {(!site.assets || site.assets.length === 0) ? (
+          <div className="empty-state" style={{ padding: '2rem' }}>
+            <p className="empty-description">No assets added yet. Click "Add Asset" to create one (e.g., CCC Flow Meter, Meadows Meter).</p>
+          </div>
+        ) : (
+          <div className="sites-grid">
+            {site.assets.map(asset => (
+              <div key={asset.id} className="site-card" onClick={() => onSelectAsset(asset)}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                  <div style={{ flex: 1 }}>
+                    <div className="site-name">{asset.name}</div>
+                    <div className="site-info">
+                      <Calendar size={14} />
+                      {(asset.data || []).length} data entries
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.25rem' }}>
+                    <button
+                      className="icon-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCopyAsset(asset);
+                      }}
+                      title="Duplicate asset"
+                    >
+                      ⎘
+                    </button>
+                    <button
+                      className="icon-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDeleteAsset(asset.id);
+                      }}
+                      title="Delete asset"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Paste Asset Dialog */}
+      {pasteDialogOpen && pasteFormData && (
+        <div className="modal-overlay" onClick={() => setPasteDialogOpen(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h3>Paste Asset - Edit Details</h3>
+              <button className="icon-btn" onClick={() => setPasteDialogOpen(false)}>
+                <X size={20} />
+              </button>
+            </div>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <div className="form-group">
+                <label className="form-label">Asset Name *</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={pasteFormData.name}
+                  onChange={(e) => setPasteFormData({ ...pasteFormData, name: e.target.value })}
+                  placeholder="Asset name"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Address/Location</label>
+                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                  <input
+                    type="text"
+                    className="form-input"
+                    value={pasteFormData.address || ''}
+                    onChange={(e) => setPasteFormData({ ...pasteFormData, address: e.target.value })}
+                    placeholder="Address, Plus Code, or Coordinates"
+                    style={{ flex: 1 }}
+                  />
+                  {pasteFormData.address && (
+                    <button 
+                      type="button"
+                      className="icon-btn" 
+                      onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(pasteFormData.address)}`, '_blank')}
+                      title="Open in Google Maps"
+                    >
+                      🗺️
+                    </button>
+                  )}
+                </div>
+                <button 
+                  type="button"
+                  className="btn" 
+                  onClick={() => {
+                    if (navigator.geolocation) {
+                      navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                          const coords = `${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`;
+                          setPasteFormData({ ...pasteFormData, address: coords });
+                        },
+                        (error) => {
+                          alert('Unable to get location. Please enable location services.');
+                        }
+                      );
+                    } else {
+                      alert('Geolocation is not supported by your browser.');
+                    }
+                  }}
+                  style={{ width: '100%', fontSize: '0.875rem' }}
+                >
+                  📍 Drop Pin at Current Location
+                </button>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Gate Code</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={pasteFormData.gateCode || ''}
+                  onChange={(e) => setPasteFormData({ ...pasteFormData, gateCode: e.target.value })}
+                  placeholder="Gate access code"
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Key Number</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={pasteFormData.keyNumber || ''}
+                  onChange={(e) => setPasteFormData({ ...pasteFormData, keyNumber: e.target.value })}
+                  placeholder="Key number"
+                />
+              </div>
+
+              <div style={{ marginTop: '1rem' }}>
+                <label className="form-label">Data Columns ({(pasteFormData.columns || []).length})</label>
+                {(pasteFormData.columns || []).map((column, index) => (
+                  <div key={column.id} style={{ 
+                    background: 'var(--bg-quaternary)', 
+                    padding: '0.75rem', 
+                    borderRadius: '8px',
+                    marginBottom: '0.5rem',
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '0.5rem'
+                  }}>
+                    <div>
+                      <label style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Title</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        value={column.title}
+                        onChange={(e) => {
+                          const updatedColumns = [...pasteFormData.columns];
+                          updatedColumns[index] = { ...column, title: e.target.value };
+                          setPasteFormData({ ...pasteFormData, columns: updatedColumns });
+                        }}
+                        style={{ marginTop: '0.25rem', marginBottom: 0 }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Unit</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        value={column.unit}
+                        onChange={(e) => {
+                          const updatedColumns = [...pasteFormData.columns];
+                          updatedColumns[index] = { ...column, unit: e.target.value };
+                          setPasteFormData({ ...pasteFormData, columns: updatedColumns });
+                        }}
+                        style={{ marginTop: '0.25rem', marginBottom: 0 }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <button className="btn" onClick={() => setPasteDialogOpen(false)} style={{ flex: 1 }}>
+                Cancel
+              </button>
+              <button className="btn btn-primary" onClick={handleSavePastedAsset} style={{ flex: 1 }}>
+                <Check size={16} />
+                Save Asset
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Asset View Component (Where actual data entry happens)
+function AssetView({ project, site, asset, onUpdate, onBack }) {
+  const [editing, setEditing] = useState(asset.isNew === true); // Auto-edit if new asset
+  const [formData, setFormData] = useState({
+    name: asset.isNew ? '' : asset.name, // Empty for new assets
+    address: asset.address || '',
+    gateCode: asset.gateCode || '',
+    keyNumber: asset.keyNumber || '',
+    columns: asset.columns || [
+      { id: '1', title: 'Reading', unit: '' }
+    ]
+  });
+  const [showDataEntry, setShowDataEntry] = useState(false);
+  const [currentValue, setCurrentValue] = useState('');
+  const [selectedColumnForEntry, setSelectedColumnForEntry] = useState(null);
+  const [columnValues, setColumnValues] = useState({});
+  const [entryMode, setEntryMode] = useState('all'); // 'all' or 'single'
+  const [dateRange, setDateRange] = useState({ start: '', end: '' });
+
+  // Handle keyboard input for data entry (including number pad)
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (!showDataEntry || !selectedColumnForEntry) return;
+      
+      // Enter key - save entry
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleAddEntry();
+        return;
+      }
+      
+      // Escape key - close modal
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setShowDataEntry(false);
+        setColumnValues({});
+        setSelectedColumnForEntry(null);
+        return;
+      }
+      
+      // Numbers (both regular and numpad)
+      if (/^[0-9]$/.test(e.key)) {
+        e.preventDefault();
+        handleNumberPad(e.key);
+        return;
+      }
+      
+      // Decimal point
+      if (e.key === '.' || e.key === ',') {
+        e.preventDefault();
+        handleDecimal();
+        return;
+      }
+      
+      // Slash for ratios
+      if (e.key === '/') {
+        e.preventDefault();
+        handleSlash();
+        return;
+      }
+      
+      // Backspace
+      if (e.key === 'Backspace') {
+        e.preventDefault();
+        handleBackspace();
+        return;
+      }
+      
+      // Delete/Clear (Ctrl+Backspace or Delete key)
+      if (e.key === 'Delete' || (e.ctrlKey && e.key === 'Backspace')) {
+        e.preventDefault();
+        handleClear();
+        return;
+      }
+    };
+    
+    if (showDataEntry) {
+      window.addEventListener('keydown', handleKeyPress);
+      return () => window.removeEventListener('keydown', handleKeyPress);
+    }
+  }, [showDataEntry, columnValues, entryMode, selectedColumnForEntry]);
+  const [showExportOptions, setShowExportOptions] = useState(false);
+  const [showMonthFilter, setShowMonthFilter] = useState(false);
+  const [selectedMonth, setSelectedMonth] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  });
+  const [exportRange, setExportRange] = useState({ start: '', end: '' });
+  const [editingEntryId, setEditingEntryId] = useState(null);
+  const [editValue, setEditValue] = useState('');
+  const [editingColumnId, setEditingColumnId] = useState(null);
+  const [inlineEditingColumnId, setInlineEditingColumnId] = useState(null);
+  const [inlineColumnTitle, setInlineColumnTitle] = useState('');
+  const [inlineColumnUnit, setInlineColumnUnit] = useState('');
+  const fileInputRef = useRef(null);
+
+  const handleSave = () => {
+    // Update asset with new column config
+    const { isNew, ...assetData } = { ...asset, ...formData }; // Remove isNew flag
+    const updatedAsset = assetData;
+    
+    // Update existing spreadsheet data with new column metadata
+    if (updatedAsset.spreadsheet && updatedAsset.spreadsheet.length > 0) {
+      updatedAsset.spreadsheet = updatedAsset.spreadsheet.map(row => {
+        if (row.columns) {
+          const updatedColumns = {};
+          formData.columns.forEach(column => {
+            if (row.columns[column.id]) {
+              // Keep existing values but update metadata
+              updatedColumns[column.id] = {
+                ...row.columns[column.id],
+                title: column.title,
+                unit: column.unit
+              };
+            }
+          });
+          return { ...row, columns: updatedColumns };
+        }
+        return row;
+      });
+    }
+    
+    // Update data entries too
+    if (updatedAsset.data && updatedAsset.data.length > 0) {
+      updatedAsset.data = updatedAsset.data.map(entry => {
+        if (entry.columns) {
+          const updatedColumns = {};
+          formData.columns.forEach(column => {
+            if (entry.columns[column.id]) {
+              updatedColumns[column.id] = {
+                ...entry.columns[column.id],
+                title: column.title,
+                unit: column.unit
+              };
+            }
+          });
+          return { ...entry, columns: updatedColumns };
+        }
+        return entry;
+      });
+    }
+    
+    onUpdate(updatedAsset);
+    setEditing(false);
+  };
+
+  const addColumn = () => {
+    const newColumn = {
+      id: Date.now().toString(),
+      title: `Column ${formData.columns.length + 1}`,
+      unit: ''
+    };
+    setFormData({
+      ...formData,
+      columns: [...formData.columns, newColumn]
+    });
+  };
+
+  const removeColumn = (columnId) => {
+    if (formData.columns.length <= 1) {
+      alert('Must have at least one column');
+      return;
+    }
+    setFormData({
+      ...formData,
+      columns: formData.columns.filter(col => col.id !== columnId)
+    });
+  };
+
+  const updateColumn = (columnId, field, value) => {
+    setFormData({
+      ...formData,
+      columns: formData.columns.map(col => 
+        col.id === columnId ? { ...col, [field]: value } : col
+      )
+    });
+  };
+
+  const handleAddEntry = () => {
+    if (entryMode === 'single') {
+      // Single column update
+      if (!selectedColumnForEntry || !columnValues[selectedColumnForEntry]) {
+        alert('Please enter a value');
+        return;
+      }
+
+      const timestamp = new Date().toISOString();
+      const date = new Date().toLocaleDateString();
+      const time = new Date().toLocaleTimeString();
+      
+      // Find or create entry for today
+      const existingEntryIndex = asset.data?.findIndex(e => e.date === date);
+      const existingSpreadsheetIndex = asset.spreadsheet?.findIndex(row => row.date === date);
+
+      let updatedData = [...(asset.data || [])];
+      let updatedSpreadsheet = [...(asset.spreadsheet || [])];
+
+      const column = formData.columns.find(c => c.id === selectedColumnForEntry);
+      const inputValue = columnValues[selectedColumnForEntry];
+      // Allow ratio format (e.g., "40/60") or numeric values
+      const value = inputValue.includes('/') ? inputValue : parseFloat(inputValue);
+
+      if (existingEntryIndex !== -1) {
+        // Update existing entry
+        const updatedEntry = { ...updatedData[existingEntryIndex] };
+        if (!updatedEntry.columns) updatedEntry.columns = {};
+        
+        updatedEntry.columns[selectedColumnForEntry] = {
+          title: column.title,
+          value: value,
+          unit: column.unit
+        };
+        updatedEntry.time = time; // Update timestamp
+        updatedEntry.timestamp = timestamp;
+
+        updatedData[existingEntryIndex] = updatedEntry;
+
+        // Update spreadsheet
+        const updatedSpreadsheetRow = { ...updatedSpreadsheet[existingSpreadsheetIndex] };
+        if (!updatedSpreadsheetRow.columns) updatedSpreadsheetRow.columns = {};
+        updatedSpreadsheetRow.columns[selectedColumnForEntry] = updatedEntry.columns[selectedColumnForEntry];
+        updatedSpreadsheetRow.time = time;
+        updatedSpreadsheetRow.timestamp = timestamp;
+
+        updatedSpreadsheet[existingSpreadsheetIndex] = updatedSpreadsheetRow;
+      } else {
+        // Create new entry
+        const entry = {
+          id: Date.now().toString(),
+          timestamp: timestamp,
+          date: date,
+          time: time,
+          columns: {}
+        };
+
+        // Initialize all columns
+        formData.columns.forEach(col => {
+          if (col.id === selectedColumnForEntry) {
+            entry.columns[col.id] = {
+              title: col.title,
+              value: value,
+              unit: col.unit
+            };
+          } else {
+            entry.columns[col.id] = {
+              title: col.title,
+              value: null,
+              unit: col.unit
+            };
+          }
+        });
+
+        const spreadsheetRow = {
+          timestamp: timestamp,
+          date: date,
+          time: time,
+          asset: asset.name,
+          site: site.name,
+          project: project.name,
+          columns: entry.columns
+        };
+
+        updatedData.push(entry);
+        updatedSpreadsheet.push(spreadsheetRow);
+      }
+
+      onUpdate({
+        ...asset,
+        data: updatedData,
+        spreadsheet: updatedSpreadsheet
+      });
+
+      setColumnValues({});
+      setShowDataEntry(false);
+    } else {
+      // All columns update (existing functionality)
+      const hasAllValues = formData.columns.every(col => columnValues[col.id]);
+      
+      if (!hasAllValues) {
+        alert('Please enter values for all columns');
+        return;
+      }
+      
+      const timestamp = new Date().toISOString();
+      const date = new Date().toLocaleDateString();
+      const time = new Date().toLocaleTimeString();
+      
+      const entry = {
+        id: Date.now().toString(),
+        timestamp: timestamp,
+        date: date,
+        time: time,
+        columns: {}
+      };
+      
+      formData.columns.forEach(column => {
+        const value = parseFloat(columnValues[column.id]);
+        
+        entry.columns[column.id] = {
+          title: column.title,
+          value: value,
+          unit: column.unit
+        };
+      });
+      
+      const updatedData = [...(asset.data || []), entry];
+      
+      const spreadsheetRow = {
+        timestamp: timestamp,
+        date: date,
+        time: time,
+        asset: asset.name,
+        site: site.name,
+        project: project.name,
+        columns: entry.columns
+      };
+      const updatedSpreadsheet = [...(asset.spreadsheet || []), spreadsheetRow];
+      
+      onUpdate({
+        ...asset,
+        data: updatedData,
+        spreadsheet: updatedSpreadsheet
+      });
+      
+      setColumnValues({});
+      setCurrentValue('');
+      setSelectedColumnForEntry(null);
+      setShowDataEntry(false);
+    }
+  };
+
+  const handleNumberPad = (digit) => {
+    if (!selectedColumnForEntry) return;
+    const newValue = (columnValues[selectedColumnForEntry] || '') + digit;
+    setColumnValues({
+      ...columnValues,
+      [selectedColumnForEntry]: newValue
+    });
+  };
+
+  const handleDecimal = () => {
+    if (!selectedColumnForEntry) return;
+    const currentVal = columnValues[selectedColumnForEntry] || '';
+    if (!currentVal.includes('.')) {
+      setColumnValues({
+        ...columnValues,
+        [selectedColumnForEntry]: currentVal + '.'
+      });
+    }
+  };
+
+  const handleSlash = () => {
+    if (!selectedColumnForEntry) return;
+    const currentVal = columnValues[selectedColumnForEntry] || '';
+    if (!currentVal.includes('/')) {
+      setColumnValues({
+        ...columnValues,
+        [selectedColumnForEntry]: currentVal + '/'
+      });
+    }
+  };
+
+  const handleBackspace = () => {
+    if (!selectedColumnForEntry) return;
+    const currentVal = columnValues[selectedColumnForEntry] || '';
+    setColumnValues({
+      ...columnValues,
+      [selectedColumnForEntry]: currentVal.slice(0, -1)
+    });
+  };
+
+  const handleClear = () => {
+    if (!selectedColumnForEntry) return;
+    setColumnValues({
+      ...columnValues,
+      [selectedColumnForEntry]: ''
+    });
+  };
+
+  const getMonthlyData = () => {
+    if (!selectedMonth) {
+      // Default to current month
+      const now = new Date();
+      const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+      setSelectedMonth(currentMonth);
+      return generateMonthlyData(currentMonth);
+    }
+    return generateMonthlyData(selectedMonth);
+  };
+
+  const generateMonthlyData = (monthString) => {
+    const [year, month] = monthString.split('-').map(Number);
+    const daysInMonth = new Date(year, month, 0).getDate();
+    const monthData = [];
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dateStr = `${month}/${day}/${year}`;
+      const entry = asset.spreadsheet?.find(row => row.date === dateStr);
+      
+      const dayData = {
+        date: dateStr,
+        day: day,
+        id: entry?.timestamp || `empty-${day}`,
+        hasData: !!entry,
+        columns: {}
+      };
+      
+      // Populate column data
+      if (entry && entry.columns) {
+        formData.columns.forEach(column => {
+          const columnData = entry.columns[column.id];
+          dayData.columns[column.id] = {
+            value: columnData?.value || '',
+            unit: columnData?.unit || column.unit || ''
+          };
+        });
+      } else {
+        // Empty data for missing days
+        formData.columns.forEach(column => {
+          dayData.columns[column.id] = {
+            value: '',
+            unit: column.unit || ''
+          };
+        });
+      }
+      
+      monthData.push(dayData);
+    }
+
+    return monthData;
+  };
+
+  const handleEditEntry = (entryId, columnId, currentValue) => {
+    setEditingEntryId(entryId);
+    setEditingColumnId(columnId);
+    setEditValue(currentValue);
+  };
+
+  const handleSaveEdit = (date, entryId) => {
+    if (!editValue || !editingColumnId) return;
+
+    const timestamp = entryId.startsWith('empty-') ? new Date().toISOString() : entryId;
+    
+    // Find existing entry
+    const existingDataIndex = asset.data?.findIndex(e => e.date === date);
+    const existingSpreadsheetIndex = asset.spreadsheet?.findIndex(row => row.date === date);
+
+    let updatedData = [...(asset.data || [])];
+    let updatedSpreadsheet = [...(asset.spreadsheet || [])];
+
+    const column = formData.columns.find(c => c.id === editingColumnId);
+    const value = parseFloat(editValue);
+
+    if (existingDataIndex !== -1 && existingSpreadsheetIndex !== -1) {
+      // Update existing entry
+      const updatedEntry = { ...updatedData[existingDataIndex] };
+      const updatedSpreadsheetRow = { ...updatedSpreadsheet[existingSpreadsheetIndex] };
+      
+      if (!updatedEntry.columns) updatedEntry.columns = {};
+      if (!updatedSpreadsheetRow.columns) updatedSpreadsheetRow.columns = {};
+      
+      updatedEntry.columns[editingColumnId] = {
+        title: column.title,
+        value: value,
+        unit: column.unit
+      };
+      
+      updatedSpreadsheetRow.columns[editingColumnId] = updatedEntry.columns[editingColumnId];
+      
+      updatedData[existingDataIndex] = updatedEntry;
+      updatedSpreadsheet[existingSpreadsheetIndex] = updatedSpreadsheetRow;
+    } else {
+      // Create new entry
+      const newEntry = {
+        id: entryId.startsWith('empty-') ? Date.now().toString() : entryId,
+        timestamp: timestamp,
+        date: date,
+        time: new Date().toLocaleTimeString(),
+        columns: {}
+      };
+      
+      // Initialize all columns with empty values except the edited one
+      formData.columns.forEach(col => {
+        if (col.id === editingColumnId) {
+          newEntry.columns[col.id] = {
+            title: col.title,
+            value: value,
+            unit: col.unit
+          };
+        } else {
+          newEntry.columns[col.id] = {
+            title: col.title,
+            value: null,
+            unit: col.unit
+          };
+        }
+      });
+
+      const spreadsheetRow = {
+        timestamp: newEntry.timestamp,
+        date: newEntry.date,
+        time: newEntry.time,
+        asset: asset.name,
+        site: site.name,
+        project: project.name,
+        columns: newEntry.columns
+      };
+
+      updatedData.push(newEntry);
+      updatedSpreadsheet.push(spreadsheetRow);
+    }
+
+    onUpdate({
+      ...asset,
+      data: updatedData,
+      spreadsheet: updatedSpreadsheet
+    });
+
+    setEditingEntryId(null);
+    setEditingColumnId(null);
+    setEditValue('');
+  };
+
+  const handleDeleteEntry = (entryId) => {
+    const updatedData = asset.data.filter(e => e.id !== entryId);
+    const entryToDelete = asset.data.find(e => e.id === entryId);
+    const updatedSpreadsheet = asset.spreadsheet.filter(row => row.timestamp !== entryToDelete.timestamp);
+    
+    onUpdate({
+      ...asset,
+      data: updatedData,
+      spreadsheet: updatedSpreadsheet
+    });
+  };
+
+  const handleInlineColumnEdit = (column) => {
+    setInlineEditingColumnId(column.id);
+    setInlineColumnTitle(column.title);
+    setInlineColumnUnit(column.unit);
+  };
+
+  const handleSaveInlineColumn = () => {
+    const updatedColumns = formData.columns.map(col => 
+      col.id === inlineEditingColumnId 
+        ? { ...col, title: inlineColumnTitle, unit: inlineColumnUnit }
+        : col
+    );
+    
+    setFormData({ ...formData, columns: updatedColumns });
+    
+    // Update asset immediately
+    const updatedAsset = { ...asset, columns: updatedColumns };
+    
+    // Update existing spreadsheet data with new column metadata
+    if (updatedAsset.spreadsheet && updatedAsset.spreadsheet.length > 0) {
+      updatedAsset.spreadsheet = updatedAsset.spreadsheet.map(row => {
+        if (row.columns && row.columns[inlineEditingColumnId]) {
+          return {
+            ...row,
+            columns: {
+              ...row.columns,
+              [inlineEditingColumnId]: {
+                ...row.columns[inlineEditingColumnId],
+                title: inlineColumnTitle,
+                unit: inlineColumnUnit
+              }
+            }
+          };
+        }
+        return row;
+      });
+    }
+    
+    onUpdate(updatedAsset);
+    setInlineEditingColumnId(null);
+  };
+
+  const handleDeleteColumn = (columnId) => {
+    if (!confirm('Delete this column? All data for this column will be removed.')) return;
+    
+    const updatedColumns = formData.columns.filter(col => col.id !== columnId);
+    setFormData({ ...formData, columns: updatedColumns });
+    
+    // Update asset and remove column data
+    const updatedAsset = { ...asset, columns: updatedColumns };
+    
+    if (updatedAsset.spreadsheet) {
+      updatedAsset.spreadsheet = updatedAsset.spreadsheet.map(row => {
+        if (row.columns) {
+          const { [columnId]: removed, ...remainingColumns } = row.columns;
+          return { ...row, columns: remainingColumns };
+        }
+        return row;
+      });
+    }
+    
+    onUpdate(updatedAsset);
+  };
+
+  const handleCameraCapture = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        alert('Camera capture received! In a production app, this would use OCR to extract data from the image and automatically populate the spreadsheet.');
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const exportCurrentMonth = () => {
+    exportToExcel([selectedMonth]);
+  };
+
+  const exportCurrentMonthPDF = () => {
+    generatePDF([selectedMonth]);
+  };
+
+  const exportRangeToExcel = () => {
+    if (!exportRange.start || !exportRange.end) return;
+    const months = getMonthsInRange(exportRange.start, exportRange.end);
+    exportToExcel(months);
+  };
+
+  const exportRangeToPDF = () => {
+    if (!exportRange.start || !exportRange.end) return;
+    const months = getMonthsInRange(exportRange.start, exportRange.end);
+    generatePDF(months);
+  };
+
+  const getMonthsInRange = (start, end) => {
+    const months = [];
+    const [startYear, startMonth] = start.split('-').map(Number);
+    const [endYear, endMonth] = end.split('-').map(Number);
+    
+    let currentYear = startYear;
+    let currentMonth = startMonth;
+    
+    while (currentYear < endYear || (currentYear === endYear && currentMonth <= endMonth)) {
+      months.push(`${currentYear}-${String(currentMonth).padStart(2, '0')}`);
+      currentMonth++;
+      if (currentMonth > 12) {
+        currentMonth = 1;
+        currentYear++;
+      }
+    }
+    
+    return months;
+  };
+
+  const exportToExcel = (months) => {
+    // Filter data by specified months
+    let filteredData = asset.spreadsheet || [];
+    if (months && months.length > 0) {
+      filteredData = filteredData.filter(row => {
+        const rowDate = new Date(row.timestamp);
+        const rowMonth = `${rowDate.getFullYear()}-${String(rowDate.getMonth() + 1).padStart(2, '0')}`;
+        return months.includes(rowMonth);
+      });
+    }
+
+    // Create CSV headers dynamically based on columns
+    const headers = ['Date', 'Time'];
+    formData.columns.forEach(column => {
+      headers.push(`${column.title}`, `Unit`);
+    });
+    headers.push('Asset', 'Site', 'Project');
+
+    // Create CSV rows
+    const csvRows = filteredData.map(row => {
+      const rowData = [row.date, row.time];
+      formData.columns.forEach(column => {
+        const colData = row.columns?.[column.id];
+        rowData.push(
+          colData?.value || '',
+          colData?.unit || ''
+        );
+      });
+      rowData.push(row.asset, row.site, row.project);
+      return rowData.join(',');
+    });
+
+    const csvContent = [headers.join(','), ...csvRows].join('\n');
+
+    // Download as CSV
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const dateStr = months.length === 1 ? `_${months[0]}` : `_${months[0]}_to_${months[months.length-1]}`;
+    a.download = `${project.name}_${site.name}_${asset.name}${dateStr}_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const generatePDF = (months) => {
+    // Filter data by months
+    let filteredData = asset.spreadsheet || [];
+    if (months && months.length > 0) {
+      filteredData = filteredData.filter(row => {
+        const rowDate = new Date(row.timestamp);
+        const rowMonth = `${rowDate.getFullYear()}-${String(rowDate.getMonth() + 1).padStart(2, '0')}`;
+        return months.includes(rowMonth);
+      });
+    }
+
+    // Create HTML report
+    const reportHTML = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 40px; }
+          h1 { color: #0a84ff; }
+          h2 { color: #5e5ce6; margin-top: 20px; }
+          .meta { color: #666; margin-bottom: 20px; padding: 15px; background: #f5f5f5; border-radius: 8px; }
+          .meta p { margin: 5px 0; }
+          table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+          th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+          th { background-color: #f5f5f5; font-weight: bold; }
+          tr:hover { background-color: #f9f9f9; }
+          .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #ddd; color: #666; text-align: center; }
+        </style>
+      </head>
+      <body>
+        <h1>${project.name}</h1>
+        <h2>${site.name} - ${asset.name}</h2>
+        
+        <div class="meta">
+          <p><strong>Project Address:</strong> ${project.address || 'N/A'}</p>
+          <p><strong>Site Address:</strong> ${formData.address || 'N/A'}</p>
+          <p><strong>Gate Code:</strong> ${formData.gateCode || project.gateCode || 'N/A'}</p>
+          <p><strong>Key Number:</strong> ${formData.keyNumber || project.keyNumber || 'N/A'}</p>
+          <p><strong>Report Generated:</strong> ${new Date().toLocaleString()}</p>
+          ${months && months.length > 0 ? `<p><strong>Period:</strong> ${months.length === 1 ? new Date(months[0] + '-01').toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : `${new Date(months[0] + '-01').toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} to ${new Date(months[months.length-1] + '-01').toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`}</p>` : ''}
+        </div>
+        
+        <h2>Data Entries</h2>
+        ${filteredData.length > 0 ? `
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Time</th>
+                ${formData.columns.map(col => `<th>${col.title}</th><th>Unit</th>`).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              ${filteredData.map(row => `
+                <tr>
+                  <td>${row.date}</td>
+                  <td>${row.time}</td>
+                  ${formData.columns.map(col => {
+                    const colData = row.columns?.[col.id];
+                    return `<td>${colData?.value || '-'}</td><td>${colData?.unit || ''}</td>`;
+                  }).join('')}
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        ` : '<p>No data entries for this period.</p>'}
+        
+        <div class="footer">
+          <p>Report generated by ProjectData</p>
+          <p>${project.name} > ${site.name} > ${asset.name}</p>
+        </div>
+      </body>
+      </html>
+    `;
+
+    // Download as HTML (can be converted to PDF)
+    const blob = new Blob([reportHTML], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const dateStr = months && months.length > 0 ? (months.length === 1 ? `_${months[0]}` : `_${months[0]}_to_${months[months.length-1]}`) : '';
+    a.download = `${project.name}_${site.name}_${asset.name}_report${dateStr}_${new Date().toISOString().split('T')[0]}.html`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="site-detail">
+      <div className="detail-header">
+        <button className="btn" onClick={onBack} style={{ marginBottom: '1rem' }}>
+          ← Back to {site.name}
+        </button>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
+          <h2 className="detail-title">{asset.name}</h2>
+          <button className="btn" onClick={() => setEditing(!editing)}>
+            <Edit2 size={16} />
+            {editing ? 'Cancel' : 'Edit'}
+          </button>
+        </div>
+
+        {editing ? (
+          <div className="detail-grid">
+            <div className="form-group">
+              <label className="form-label">Asset Name</label>
+              <input
+                type="text"
+                className="form-input"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="e.g., Meadows Meter, CCC Flow Meter"
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Address/Location</label>
+              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                <input
+                  type="text"
+                  className="form-input"
+                  value={formData.address}
+                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                  placeholder="Address, Plus Code, or Coordinates"
+                  style={{ flex: 1 }}
+                />
+                {formData.address && (
+                  <button 
+                    type="button"
+                    className="icon-btn" 
+                    onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(formData.address)}`, '_blank')}
+                    title="Open in Google Maps"
+                  >
+                    🗺️
+                  </button>
+                )}
+              </div>
+              <button 
+                type="button"
+                className="btn" 
+                onClick={() => {
+                  if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                      (position) => {
+                        const coords = `${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`;
+                        setFormData({ ...formData, address: coords });
+                      },
+                      (error) => {
+                        alert('Unable to get location. Please enable location services.');
+                      }
+                    );
+                  } else {
+                    alert('Geolocation is not supported by your browser.');
+                  }
+                }}
+                style={{ width: '100%', fontSize: '0.875rem' }}
+              >
+                📍 Drop Pin at Current Location
+              </button>
+            </div>
+            <div className="form-group">
+              <label className="form-label">Gate Code</label>
+              <input
+                type="text"
+                className="form-input"
+                value={formData.gateCode}
+                onChange={(e) => setFormData({ ...formData, gateCode: e.target.value })}
+                placeholder="Gate access code"
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Key Number</label>
+              <input
+                type="text"
+                className="form-input"
+                value={formData.keyNumber}
+                onChange={(e) => setFormData({ ...formData, keyNumber: e.target.value })}
+                placeholder="Key number"
+              />
+            </div>
+            
+            {/* Data Columns Configuration */}
+            <div style={{ gridColumn: '1 / -1', marginTop: '1rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <label className="form-label" style={{ marginBottom: 0 }}>Data Columns</label>
+                <button className="btn btn-primary" onClick={addColumn} type="button">
+                  <Plus size={16} />
+                  Add Column
+                </button>
+              </div>
+              
+              <div style={{ 
+                background: 'var(--bg-quaternary)', 
+                padding: '1.5rem', 
+                borderRadius: '12px',
+                border: '1px solid var(--border)'
+              }}>
+                {formData.columns.map((column, index) => (
+                  <div 
+                    key={column.id} 
+                    style={{ 
+                      background: 'var(--bg-tertiary)',
+                      padding: '1rem',
+                      borderRadius: '8px',
+                      marginBottom: index < formData.columns.length - 1 ? '1rem' : 0,
+                      border: '1px solid var(--border)'
+                    }}
+                  >
+                    <div style={{ 
+                      display: 'flex', 
+                      justifyContent: 'space-between', 
+                      alignItems: 'center',
+                      marginBottom: '1rem'
+                    }}>
+                      <h5 style={{ fontSize: '0.875rem', fontWeight: '600', color: 'var(--text-secondary)' }}>
+                        Column {index + 1}
+                      </h5>
+                      {formData.columns.length > 1 && (
+                        <button
+                          type="button"
+                          className="icon-btn"
+                          onClick={() => removeColumn(column.id)}
+                          title="Remove column"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      )}
+                    </div>
+                    
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
+                      <div className="form-group" style={{ marginBottom: 0 }}>
+                        <label className="form-label">Title</label>
+                        <input
+                          type="text"
+                          className="form-input"
+                          value={column.title}
+                          onChange={(e) => updateColumn(column.id, 'title', e.target.value)}
+                          placeholder="e.g., Flow Rate, Pressure"
+                        />
+                      </div>
+                      <div className="form-group" style={{ marginBottom: 0 }}>
+                        <label className="form-label">Unit</label>
+                        <input
+                          type="text"
+                          className="form-input"
+                          value={column.unit}
+                          onChange={(e) => updateColumn(column.id, 'unit', e.target.value)}
+                          placeholder="e.g., GPM, PSI, °F"
+                        />
+                      </div>
+                      <div className="form-group" style={{ marginBottom: 0 }}>
+                        <label className="form-label">
+                          Multiplier
+                          <span style={{ fontSize: '0.7rem', color: 'var(--text-tertiary)', marginLeft: '0.25rem' }}>
+                            (for flow meters)
+                          </span>
+                        </label>
+                        <input
+                          type="text"
+                          className="form-input"
+                          value={column.multiplier || ''}
+                          onChange={(e) => updateColumn(column.id, 'multiplier', e.target.value)}
+                          placeholder="e.g., 1000, 100"
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* Calculation Settings */}
+                    <div style={{ 
+                      marginTop: '1rem', 
+                      padding: '1rem', 
+                      background: 'var(--bg-quaternary)', 
+                      borderRadius: '8px',
+                      border: '1px dashed var(--border)'
+                    }}>
+                      <div style={{ fontSize: '0.75rem', fontWeight: '600', marginBottom: '0.75rem', color: 'var(--text-secondary)' }}>
+                        📊 Automatic Calculations
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+                        {/* Daily Flow - only show if multiplier exists */}
+                        {column.multiplier && column.multiplier.trim() !== '' && (
+                          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', cursor: 'pointer', gridColumn: '1 / -1' }}>
+                            <input
+                              type="checkbox"
+                              checked={column.calculations?.dailyFlow || false}
+                              onChange={(e) => updateColumn(column.id, 'calculations', {
+                                ...column.calculations,
+                                dailyFlow: e.target.checked
+                              })}
+                              style={{ cursor: 'pointer' }}
+                            />
+                            Daily Flow (tomorrow - today)
+                          </label>
+                        )}
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', cursor: 'pointer' }}>
+                          <input
+                            type="checkbox"
+                            checked={column.calculations?.monthlyTotal || false}
+                            onChange={(e) => updateColumn(column.id, 'calculations', {
+                              ...column.calculations,
+                              monthlyTotal: e.target.checked
+                            })}
+                            style={{ cursor: 'pointer' }}
+                          />
+                          Monthly Total
+                        </label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', cursor: 'pointer' }}>
+                          <input
+                            type="checkbox"
+                            checked={column.calculations?.monthlyAverage || false}
+                            onChange={(e) => updateColumn(column.id, 'calculations', {
+                              ...column.calculations,
+                              monthlyAverage: e.target.checked
+                            })}
+                            style={{ cursor: 'pointer' }}
+                          />
+                          Monthly Average
+                        </label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', cursor: 'pointer', gridColumn: '1 / -1' }}>
+                          <input
+                            type="checkbox"
+                            checked={column.calculations?.rolling3Month || false}
+                            onChange={(e) => updateColumn(column.id, 'calculations', {
+                              ...column.calculations,
+                              rolling3Month: e.target.checked
+                            })}
+                            style={{ cursor: 'pointer' }}
+                          />
+                          3-Month Rolling Avg
+                        </label>
+                      </div>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--text-tertiary)', marginTop: '0.5rem' }}>
+                        {column.multiplier && column.multiplier.trim() !== '' 
+                          ? 'Calculations use multiplied values. Daily Flow = (next day × multiplier) - (today × multiplier)'
+                          : 'These calculations will appear in exports'}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div style={{ gridColumn: '1 / -1' }}>
+              <button className="btn btn-primary" onClick={handleSave}>
+                <Check size={16} />
+                Save Changes
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="detail-grid">
+            {formData.address && (
+              <div>
+                <div className="form-label">Location</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <div className="project-meta">
+                    <MapPin size={16} />
+                    {formData.address}
+                  </div>
+                  <button 
+                    className="icon-btn" 
+                    onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(formData.address)}`, '_blank')}
+                    title="Open in Google Maps"
+                  >
+                    🗺️
+                  </button>
+                </div>
+              </div>
+            )}
+            {formData.gateCode && (
+              <div>
+                <div className="form-label">Gate Code</div>
+                <div style={{ fontFamily: "'JetBrains Mono', monospace" }}>{formData.gateCode}</div>
+              </div>
+            )}
+            {formData.keyNumber && (
+              <div>
+                <div className="form-label">Key Number</div>
+                <div style={{ fontFamily: "'JetBrains Mono', monospace" }}>{formData.keyNumber}</div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      <div className="data-collection">
+        <h3 style={{ marginBottom: '1.5rem', fontSize: '1.25rem', fontWeight: '600' }}>Quick Data Entry</h3>
+        
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          onChange={handleCameraCapture}
+        />
+        
+        {/* Data Columns - Click to Enter Data */}
+        <div style={{
+          background: 'var(--bg-secondary)',
+          border: '1px solid var(--border)',
+          borderRadius: '12px',
+          marginBottom: '2rem',
+          padding: '1rem'
+        }}>
+          <div style={{
+            fontSize: '1rem',
+            fontWeight: '600',
+            marginBottom: '1rem',
+            color: 'var(--text-primary)'
+          }}>
+            📊 Data Columns ({formData.columns.length}) - Click to Enter Data
+          </div>
+          
+          <div style={{ display: 'grid', gap: '0.75rem' }}>
+            {formData.columns.map((column) => (
+              <button
+                key={column.id}
+                onClick={() => {
+                  setSelectedColumnForEntry(column.id);
+                  setEntryMode('single');
+                  setShowDataEntry(true);
+                  setCurrentValue('');
+                }}
+                style={{
+                  background: 'var(--bg-tertiary)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '8px',
+                  padding: '1rem',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  color: 'var(--text-primary)',
+                  transition: 'all 0.2s',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-quaternary)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'var(--bg-tertiary)'}
+              >
+                <div>
+                  <div style={{ fontWeight: '600', marginBottom: '0.25rem', fontSize: '1rem' }}>
+                    {column.title}
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                    {column.unit || 'No unit'} • Click to enter today's value
+                  </div>
+                </div>
+                <span style={{ fontSize: '1.5rem', opacity: 0.5 }}>→</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {showDataEntry && (
+          <div 
+            className="modal-overlay" 
+            onClick={() => {
+              setShowDataEntry(false);
+              setColumnValues({});
+              setSelectedColumnForEntry(null);
+            }}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'rgba(0, 0, 0, 0.7)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1000
+            }}
+          >
+            <div 
+              onClick={(e) => e.stopPropagation()}
+              style={{ 
+                background: 'var(--bg-tertiary)',
+                padding: '2rem',
+                borderRadius: '16px',
+                width: '90%',
+                maxWidth: '600px',
+                maxHeight: '90vh',
+                overflowY: 'auto'
+              }}
+            >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h4 style={{ fontSize: '1.1rem', fontWeight: '600' }}>
+                {entryMode === 'all' ? 'Enter Values for All Columns' : 
+                 (() => {
+                   const col = formData.columns.find(c => c.id === selectedColumnForEntry);
+                   return col ? `Enter ${col.title}` : 'Enter Value';
+                 })()}
+              </h4>
+              <button className="icon-btn" onClick={() => { 
+                setShowDataEntry(false); 
+                setColumnValues({});
+                setSelectedColumnForEntry(null);
+              }}>
+                <X size={20} />
+              </button>
+            </div>
+            
+            {/* Column Selector Tabs */}
+            <div style={{ 
+              display: 'flex', 
+              gap: '0.5rem', 
+              marginBottom: '1.5rem',
+              flexWrap: 'wrap'
+            }}>
+              {formData.columns.map((column) => {
+                const hasValue = columnValues[column.id];
+                const isSelected = selectedColumnForEntry === column.id;
+                return (
+                  <button
+                    key={column.id}
+                    onClick={() => setSelectedColumnForEntry(column.id)}
+                    style={{
+                      background: isSelected ? 'var(--primary)' : 'var(--bg-quaternary)',
+                      border: hasValue ? '2px solid var(--success)' : '1px solid var(--border)',
+                      borderRadius: '8px',
+                      padding: '0.75rem 1rem',
+                      color: isSelected ? 'white' : 'var(--text-primary)',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      fontWeight: '500',
+                      position: 'relative'
+                    }}
+                  >
+                    {column.title}
+                    {hasValue && (
+                      <span style={{
+                        position: 'absolute',
+                        top: '-4px',
+                        right: '-4px',
+                        background: 'var(--success)',
+                        borderRadius: '50%',
+                        width: '12px',
+                        height: '12px'
+                      }} />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {selectedColumnForEntry && (() => {
+              const selectedColumn = formData.columns.find(c => c.id === selectedColumnForEntry);
+              const currentVal = columnValues[selectedColumnForEntry] || '';
+              
+              return (
+                <>
+                  {/* Display */}
+                  <div style={{ 
+                    background: 'var(--bg-quaternary)', 
+                    padding: '2rem 1.5rem', 
+                    borderRadius: '12px', 
+                    marginBottom: '1.5rem',
+                    border: '2px solid var(--border)',
+                    minHeight: '80px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.5rem'
+                  }}>
+                    <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                      {selectedColumn.title}
+                    </div>
+                    <div style={{ 
+                      fontFamily: "'JetBrains Mono', monospace", 
+                      fontSize: '3rem', 
+                      fontWeight: '500',
+                      color: currentVal ? 'var(--text-primary)' : 'var(--text-tertiary)'
+                    }}>
+                      {currentVal || '0'}
+                      {selectedColumn.unit && <span style={{ fontSize: '1.5rem', marginLeft: '0.5rem', color: 'var(--text-secondary)' }}>{selectedColumn.unit}</span>}
+                    </div>
+                  </div>
+                </>
+              );
+            })()}
+
+            {/* Number Pad */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', marginBottom: '1rem' }}>
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
+                <button
+                  key={num}
+                  onClick={() => handleNumberPad(num.toString())}
+                  style={{
+                    background: 'var(--bg-quaternary)',
+                    border: '1px solid var(--border)',
+                    borderRadius: '12px',
+                    padding: '1.5rem',
+                    fontSize: '1.5rem',
+                    fontWeight: '600',
+                    color: 'var(--text-primary)',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    fontFamily: "'JetBrains Mono', monospace"
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.background = 'var(--bg-tertiary)';
+                    e.target.style.transform = 'scale(1.05)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.background = 'var(--bg-quaternary)';
+                    e.target.style.transform = 'scale(1)';
+                  }}
+                >
+                  {num}
+                </button>
+              ))}
+              <button
+                onClick={handleDecimal}
+                style={{
+                  background: 'var(--bg-quaternary)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '12px',
+                  padding: '1.5rem',
+                  fontSize: '1.5rem',
+                  fontWeight: '600',
+                  color: 'var(--text-primary)',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  fontFamily: "'JetBrains Mono', monospace"
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = 'var(--bg-tertiary)';
+                  e.target.style.transform = 'scale(1.05)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'var(--bg-quaternary)';
+                  e.target.style.transform = 'scale(1)';
+                }}
+              >
+                .
+              </button>
+              <button
+                onClick={() => handleNumberPad('0')}
+                style={{
+                  background: 'var(--bg-quaternary)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '12px',
+                  padding: '1.5rem',
+                  fontSize: '1.5rem',
+                  fontWeight: '600',
+                  color: 'var(--text-primary)',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  fontFamily: "'JetBrains Mono', monospace"
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = 'var(--bg-tertiary)';
+                  e.target.style.transform = 'scale(1.05)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'var(--bg-quaternary)';
+                  e.target.style.transform = 'scale(1)';
+                }}
+              >
+                0
+              </button>
+              <button
+                onClick={handleSlash}
+                style={{
+                  background: 'var(--bg-quaternary)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '12px',
+                  padding: '1.5rem',
+                  fontSize: '1.5rem',
+                  fontWeight: '600',
+                  color: 'var(--text-primary)',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  fontFamily: "'JetBrains Mono', monospace"
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = 'var(--bg-tertiary)';
+                  e.target.style.transform = 'scale(1.05)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'var(--bg-quaternary)';
+                  e.target.style.transform = 'scale(1)';
+                }}
+              >
+                /
+              </button>
+              <button
+                onClick={handleBackspace}
+                style={{
+                  background: 'var(--danger)',
+                  border: 'none',
+                  borderRadius: '12px',
+                  padding: '1.5rem',
+                  fontSize: '1.5rem',
+                  fontWeight: '600',
+                  color: 'white',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = '#e03a30';
+                  e.target.style.transform = 'scale(1.05)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'var(--danger)';
+                  e.target.style.transform = 'scale(1)';
+                }}
+              >
+                ⌫
+              </button>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+              <button 
+                className="btn" 
+                onClick={handleClear}
+                style={{ padding: '1rem', fontSize: '1rem' }}
+              >
+                Clear
+              </button>
+              <button 
+                className="btn btn-primary" 
+                onClick={handleAddEntry}
+                style={{ 
+                  padding: '1rem', 
+                  fontSize: '1rem'
+                }}
+              >
+                <Check size={18} />
+                {entryMode === 'all' ? 'Save All' : 'Save'}
+              </button>
+            </div>
+            </div>
+          </div>
+        )}
+
+        {/* Archive and Export Controls */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+          {/* Archive Button */}
+          <button 
+            className="btn" 
+            onClick={() => setShowMonthFilter(!showMonthFilter)}
+            style={{ padding: '1rem' }}
+          >
+            <Calendar size={16} />
+            Archive
+          </button>
+          
+          {/* Export Button */}
+          <button 
+            className="btn" 
+            onClick={() => setShowExportOptions(!showExportOptions)}
+            style={{ padding: '1rem' }}
+          >
+            <Download size={16} />
+            Export
+          </button>
+        </div>
+
+        {/* Archive Month Selector */}
+        {showMonthFilter && (
+          <div style={{ 
+            marginBottom: '1rem',
+            padding: '1rem',
+            background: 'var(--bg-tertiary)',
+            borderRadius: '12px',
+            border: '1px solid var(--border)'
+          }}>
+            <label className="form-label">Select Month to View</label>
+            <input
+              type="month"
+              className="form-input"
+              value={selectedMonth}
+              onChange={(e) => {
+                setSelectedMonth(e.target.value);
+                setShowMonthFilter(false);
+              }}
+            />
+          </div>
+        )}
+
+        {/* Export Options */}
+        {showExportOptions && (
+          <div style={{ 
+            marginBottom: '1rem',
+            padding: '1.5rem',
+            background: 'var(--bg-tertiary)',
+            borderRadius: '12px',
+            border: '1px solid var(--border)'
+          }}>
+            <h5 style={{ marginBottom: '1rem', fontWeight: '600' }}>Export Options</h5>
+            
+            {/* Quick Export Current View */}
+            <div style={{ marginBottom: '1.5rem', paddingBottom: '1.5rem', borderBottom: '1px solid var(--border)' }}>
+              <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
+                Export Current View ({new Date(selectedMonth + '-01').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })})
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                <button className="btn btn-primary" onClick={() => { exportCurrentMonth(); setShowExportOptions(false); }}>
+                  <FileSpreadsheet size={16} />
+                  Excel
+                </button>
+                <button className="btn btn-primary" onClick={() => { exportCurrentMonthPDF(); setShowExportOptions(false); }}>
+                  <Download size={16} />
+                  PDF
+                </button>
+              </div>
+            </div>
+
+            {/* Export Date Range */}
+            <div>
+              <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.75rem' }}>
+                Export Date Range
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '0.75rem' }}>
+                <div>
+                  <label className="form-label">From</label>
+                  <input
+                    type="month"
+                    className="form-input"
+                    value={exportRange.start}
+                    onChange={(e) => setExportRange({ ...exportRange, start: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="form-label">To</label>
+                  <input
+                    type="month"
+                    className="form-input"
+                    value={exportRange.end}
+                    onChange={(e) => setExportRange({ ...exportRange, end: e.target.value })}
+                  />
+                </div>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                <button 
+                  className="btn btn-primary" 
+                  onClick={() => { exportRangeToExcel(); setShowExportOptions(false); }}
+                  disabled={!exportRange.start || !exportRange.end}
+                  style={{ opacity: exportRange.start && exportRange.end ? 1 : 0.5 }}
+                >
+                  <FileSpreadsheet size={16} />
+                  Excel Range
+                </button>
+                <button 
+                  className="btn btn-primary" 
+                  onClick={() => { exportRangeToPDF(); setShowExportOptions(false); }}
+                  disabled={!exportRange.start || !exportRange.end}
+                  style={{ opacity: exportRange.start && exportRange.end ? 1 : 0.5 }}
+                >
+                  <Download size={16} />
+                  PDF Range
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="spreadsheet-preview">
+          <h4 style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <FileSpreadsheet size={20} />
+            {(() => {
+              const now = new Date();
+              const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                                'July', 'August', 'September', 'October', 'November', 'December'];
+              return `${monthNames[now.getMonth()]} ${now.getFullYear()}`;
+            })()}
+          </h4>
+          {(() => {
+            const monthlyData = getMonthlyData();
+            return monthlyData.length === 0 ? (
+              <p style={{ color: 'var(--text-secondary)', textAlign: 'center', padding: '2rem' }}>
+                Select a month to view spreadsheet data
+              </p>
+            ) : (
+              <div style={{ maxHeight: '400px', overflowY: 'auto', overflowX: 'auto' }}>
+                <table className="spreadsheet-table">
+                  <thead>
+                    <tr>
+                      <th style={{ position: 'sticky', left: 0, background: 'var(--bg-quaternary)', zIndex: 2 }}>Date</th>
+                      {formData.columns.map(column => (
+                        <th key={column.id}>{column.title}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {monthlyData.map((row) => (
+                      <tr key={row.id} style={{ background: row.hasData ? 'transparent' : 'var(--bg-secondary)' }}>
+                        <td style={{ position: 'sticky', left: 0, background: row.hasData ? 'var(--bg-tertiary)' : 'var(--bg-secondary)', zIndex: 1 }}>
+                          {row.date}
+                        </td>
+                        {formData.columns.map(column => {
+                          const isEditing = editingEntryId === row.id && editingColumnId === column.id;
+                          const cellData = row.columns[column.id];
+                          
+                          return (
+                            <td key={column.id}>
+                              {isEditing ? (
+                                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                                  <input
+                                    type="number"
+                                    step="0.01"
+                                    className="form-input"
+                                    value={editValue}
+                                    onChange={(e) => setEditValue(e.target.value)}
+                                    style={{ 
+                                      padding: '0.5rem', 
+                                      fontSize: '0.875rem',
+                                      minWidth: '80px',
+                                      marginBottom: 0
+                                    }}
+                                    autoFocus
+                                  />
+                                  <button
+                                    className="icon-btn"
+                                    onClick={() => handleSaveEdit(row.date, row.id)}
+                                    title="Save"
+                                    style={{ background: 'var(--success)', color: 'white' }}
+                                  >
+                                    <Check size={12} />
+                                  </button>
+                                  <button
+                                    className="icon-btn"
+                                    onClick={() => {
+                                      setEditingEntryId(null);
+                                      setEditingColumnId(null);
+                                      setEditValue('');
+                                    }}
+                                    title="Cancel"
+                                  >
+                                    <X size={12} />
+                                  </button>
+                                </div>
+                              ) : (
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
+                                  <span style={{ fontFamily: "'JetBrains Mono', monospace", flex: 1 }}>
+                                    {cellData?.value ? `${cellData.value} ${cellData.unit}` : '-'}
+                                  </span>
+                                  <button
+                                    className="icon-btn"
+                                    onClick={() => handleEditEntry(row.id, column.id, cellData?.value || '')}
+                                    title="Edit"
+                                    style={{ padding: '0.25rem' }}
+                                  >
+                                    <Edit2 size={12} />
+                                  </button>
+                                </div>
+                              )}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            );
+          })()}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<ProjectDataApp />);
+    </script>
+</body>
+</html>
