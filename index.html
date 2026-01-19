@@ -1650,12 +1650,14 @@ function ProjectView({ project, onUpdate, onAddSite, onSelectSite, onDeleteSite,
       const assets = site.assets || [];
       
       assets.forEach(asset => {
-        headerRow.push('Asset', 'Time');
+        headerRow.push('Asset');
         
         // Add each column with its unit and calculations
         asset.columns?.forEach(col => {
           const multiplier = col.multiplier ? parseFloat(col.multiplier) : null;
           const isRatio = !multiplier;
+          
+          headerRow.push('Time'); // Time for this specific column
           
           if (multiplier) {
             // Flow meter: raw, calculated, daily flow
@@ -1698,13 +1700,15 @@ function ProjectView({ project, onUpdate, onAddSite, onSelectSite, onDeleteSite,
           asset.columns?.forEach(col => {
             const colData = row?.columns?.[col.id];
             const colValue = colData?.value;
+            const colTime = colData?.time || '';
             const isRatio = typeof colValue === 'string' && colValue?.includes('/');
             
             if (isRatio) {
               dataByDate[date][asset.id].columns[col.title] = {
                 raw: colValue,
                 calculated: colValue,
-                isRatio: true
+                isRatio: true,
+                time: colTime
               };
             } else {
               const rawValue = parseFloat(colValue) || 0;
@@ -1714,7 +1718,8 @@ function ProjectView({ project, onUpdate, onAddSite, onSelectSite, onDeleteSite,
               dataByDate[date][asset.id].columns[col.title] = {
                 raw: rawValue,
                 calculated: calculatedValue,
-                multiplier: multiplier
+                multiplier: multiplier,
+                time: colTime
               };
             }
           });
@@ -1808,11 +1813,13 @@ function ProjectView({ project, onUpdate, onAddSite, onSelectSite, onDeleteSite,
         assets.forEach(asset => {
           const assetData = dataByDate[date][asset.id];
           dataRow.push(asset.name);
-          dataRow.push(assetData.time);
           
           asset.columns?.forEach(col => {
             const colData = assetData.columns[col.title];
             const multiplier = parseFloat(col.multiplier) || null;
+            
+            // Add time for this specific column
+            dataRow.push(colData?.time || '');
             
             if (colData?.isRatio) {
               dataRow.push(colData.raw);
@@ -2878,7 +2885,9 @@ function AssetView({ project, site, asset, onUpdate, onBack }) {
         updatedEntry.columns[selectedColumnForEntry] = {
           title: column.title,
           value: value,
-          unit: column.unit
+          unit: column.unit,
+          timestamp: timestamp,
+          time: time
         };
         updatedEntry.time = time; // Update timestamp
         updatedEntry.timestamp = timestamp;
@@ -2909,13 +2918,17 @@ function AssetView({ project, site, asset, onUpdate, onBack }) {
             entry.columns[col.id] = {
               title: col.title,
               value: value,
-              unit: col.unit
+              unit: col.unit,
+              timestamp: timestamp,
+              time: time
             };
           } else {
             entry.columns[col.id] = {
               title: col.title,
               value: null,
-              unit: col.unit
+              unit: col.unit,
+              timestamp: null,
+              time: null
             };
           }
         });
