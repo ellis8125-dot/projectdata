@@ -18,6 +18,7 @@
 <body>
     <div id="root"></div>
     <script type="text/babel">
+    <script type="text/babel">
 const { useState, useEffect, useRef } = React;
 
 // Icon components
@@ -1550,6 +1551,24 @@ function ProjectView({ project, onUpdate, onAddSite, onSelectSite, onDeleteSite,
     setEditing(false);
   };
 
+  // Handle Enter key to save
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Only trigger if we're in editing mode and not in a modal/dialog
+      if (editing && e.key === 'Enter' && !showExport && !showTemplates) {
+        // Check if we're in a textarea (don't save on Enter in textarea)
+        if (e.target.tagName === 'TEXTAREA') return;
+        
+        e.preventDefault();
+        e.stopPropagation();
+        handleSave();
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown, true);
+    return () => window.removeEventListener('keydown', handleKeyDown, true);
+  }, [editing, showExport, showTemplates, formData]);
+
   const exportConsolidated = async () => {
     // Import XLSX library dynamically
     if (!window.XLSX) {
@@ -1620,6 +1639,11 @@ function ProjectView({ project, onUpdate, onAddSite, onSelectSite, onDeleteSite,
     
     // Create workbook
     const wb = XLSX.utils.book_new();
+    
+    console.log('Total sites in project:', project.sites?.length);
+    project.sites?.forEach(site => {
+      console.log('Site:', site.name, 'Assets:', site.assets?.length);
+    });
     
     // Process each site as a separate sheet
     project.sites?.forEach(site => {
@@ -1935,8 +1959,12 @@ function ProjectView({ project, onUpdate, onAddSite, onSelectSite, onDeleteSite,
       
       // Add sheet to workbook (clean up sheet name)
       const sheetName = site.name.substring(0, 31).replace(/[\\/?*[\]]/g, '_');
+      console.log('Adding sheet:', sheetName, 'with', sheetData.length, 'rows');
       XLSX.utils.book_append_sheet(wb, ws, sheetName);
     });
+    
+    console.log('Total sheets created:', wb.SheetNames.length);
+    console.log('Sheet names:', wb.SheetNames);
     
     // Generate filename
     let filename = `${project.name}_data`;
@@ -2615,6 +2643,21 @@ function SiteView({ project, site, onUpdate, onAddAsset, onSelectAsset, onDelete
     setEditing(false);
   };
 
+  // Handle Enter key to save (separate from paste dialog handler)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (editing && e.key === 'Enter' && !pasteDialogOpen) {
+        if (e.target.tagName === 'TEXTAREA') return;
+        e.preventDefault();
+        e.stopPropagation();
+        handleSave();
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown, true);
+    return () => window.removeEventListener('keydown', handleKeyDown, true);
+  }, [editing, pasteDialogOpen, formData]);
+
   const handleCopyAsset = (asset) => {
     // Check for duplicate name
     let newName = asset.name;
@@ -3144,6 +3187,13 @@ function AssetView({ project, site, asset, onUpdate, onBack }) {
         handleClear();
         return;
       }
+      
+      // Enter to save
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleAddEntry();
+        return;
+      }
     };
     
     if (showDataEntry) {
@@ -3215,6 +3265,21 @@ function AssetView({ project, site, asset, onUpdate, onBack }) {
     onUpdate(updatedAsset);
     setEditing(false);
   };
+
+  // Handle Enter key to save (separate from data entry handler)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (editing && e.key === 'Enter' && !showDataEntry) {
+        if (e.target.tagName === 'TEXTAREA') return;
+        e.preventDefault();
+        e.stopPropagation();
+        handleSave();
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown, true);
+    return () => window.removeEventListener('keydown', handleKeyDown, true);
+  }, [editing, showDataEntry, formData]);
 
   const addColumn = () => {
     const newColumn = {
@@ -4744,6 +4809,7 @@ function AssetView({ project, site, asset, onUpdate, onBack }) {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<ProjectDataApp />);
+    </script>
     </script>
 </body>
 </html>
