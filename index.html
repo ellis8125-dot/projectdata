@@ -4739,6 +4739,17 @@ function AssetView({ project, site, asset, onUpdate, onBack }) {
                                     className="form-input"
                                     value={editValue}
                                     onChange={(e) => setEditValue(e.target.value)}
+                                    onKeyDown={(e) => {
+                                      if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                        handleSaveEdit(row.date, row.id);
+                                      } else if (e.key === 'Escape') {
+                                        e.preventDefault();
+                                        setEditingEntryId(null);
+                                        setEditingColumnId(null);
+                                        setEditValue('');
+                                      }
+                                    }}
                                     style={{ 
                                       padding: '0.5rem', 
                                       fontSize: '0.875rem',
