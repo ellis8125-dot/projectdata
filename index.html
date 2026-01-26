@@ -61,50 +61,6 @@ window.storage = {
   }
 };
 
-const { useState, useEffect, useRef } = React;
-
-// Icon components
-const Camera = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>📷</span>;
-const Plus = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>➕</span>;
-const Download = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>⬇️</span>;
-const MapPin = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>📍</span>;
-const Edit2 = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>✏️</span>;
-const Trash2 = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>🗑️</span>;
-const ChevronRight = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>›</span>;
-const Home = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>🏠</span>;
-const FolderOpen = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>📂</span>;
-const Calendar = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>📅</span>;
-const Search = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>🔍</span>;
-const Menu = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>☰</span>;
-const X = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>✕</span>;
-const Check = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>✓</span>;
-const FileSpreadsheet = ({size}) => <span style={{fontSize: size ? size+'px' : '16px'}}>📊</span>;
-
-// Mock storage
-window.storage = {
-  async get(key) {
-    const value = localStorage.getItem(key);
-    return value ? { key, value, shared: false } : null;
-  },
-  async set(key, value) {
-    localStorage.setItem(key, value);
-    return { key, value, shared: false };
-  },
-  async delete(key) {
-    localStorage.removeItem(key);
-    return { key, deleted: true, shared: false };
-  },
-  async list(prefix) {
-    const keys = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key.startsWith(prefix)) keys.push(key);
-    }
-    return { keys, prefix, shared: false };
-  }
-};
-
-// Main App Component
 function ProjectDataApp() {
   const [projects, setProjects] = useState([]);
   const [currentView, setCurrentView] = useState('home');
@@ -4841,6 +4797,9 @@ function AssetView({ project, site, asset, onUpdate, onBack }) {
     </div>
   );
 }
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<ProjectDataApp />);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<ProjectDataApp />);
