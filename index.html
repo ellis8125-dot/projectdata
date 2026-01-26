@@ -39,19 +39,19 @@ const FileSpreadsheet = ({size}) => <span style={{fontSize: size ? size+'px' : '
 
 // Mock storage
 window.storage = {
-  async get(key) {
+  get: async function(key) {
     const value = localStorage.getItem(key);
     return value ? { key, value, shared: false } : null;
   },
-  async set(key, value) {
+  set: async function(key, value) {
     localStorage.setItem(key, value);
     return { key, value, shared: false };
   },
-  async delete(key) {
+  delete: async function(key) {
     localStorage.removeItem(key);
     return { key, deleted: true, shared: false };
   },
-  async list(prefix) {
+  list: async function(prefix) {
     const keys = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
