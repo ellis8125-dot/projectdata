@@ -3131,76 +3131,6 @@ function AssetView({ project, site, asset, onUpdate, onBack }) {
   const [columnValues, setColumnValues] = useState({});
   const [entryMode, setEntryMode] = useState('all'); // 'all' or 'single'
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
-
-  // Handle keyboard input for data entry (including number pad)
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      if (!showDataEntry || !selectedColumnForEntry) return;
-      
-      // Enter key - save entry
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        handleAddEntry();
-        return;
-      }
-      
-      // Escape key - close modal
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        setShowDataEntry(false);
-        setColumnValues({});
-        setSelectedColumnForEntry(null);
-        return;
-      }
-      
-      // Numbers (both regular and numpad)
-      if (/^[0-9]$/.test(e.key)) {
-        e.preventDefault();
-        handleNumberPad(e.key);
-        return;
-      }
-      
-      // Decimal point
-      if (e.key === '.' || e.key === ',') {
-        e.preventDefault();
-        handleDecimal();
-        return;
-      }
-      
-      // Slash for ratios
-      if (e.key === '/') {
-        e.preventDefault();
-        handleSlash();
-        return;
-      }
-      
-      // Backspace
-      if (e.key === 'Backspace') {
-        e.preventDefault();
-        handleBackspace();
-        return;
-      }
-      
-      // Delete/Clear (Ctrl+Backspace or Delete key)
-      if (e.key === 'Delete' || (e.ctrlKey && e.key === 'Backspace')) {
-        e.preventDefault();
-        handleClear();
-        return;
-      }
-      
-      // Enter to save
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        handleAddEntry();
-        return;
-      }
-    };
-    
-    if (showDataEntry) {
-      window.addEventListener('keydown', handleKeyPress);
-      return () => window.removeEventListener('keydown', handleKeyPress);
-    }
-  }, [showDataEntry, columnValues, entryMode, selectedColumnForEntry, handleNumberPad, handleDecimal, handleSlash, handleBackspace, handleClear, handleAddEntry]);
   const [showExportOptions, setShowExportOptions] = useState(false);
   const [showMonthFilter, setShowMonthFilter] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(() => {
@@ -3519,6 +3449,69 @@ function AssetView({ project, site, asset, onUpdate, onBack }) {
       [selectedColumnForEntry]: ''
     });
   };
+
+  // Handle keyboard input for data entry - MUST be after all handlers are defined
+  useEffect(() => {
+    if (!showDataEntry) return;
+    
+    const handleKeyPress = (e) => {
+      if (!selectedColumnForEntry) return;
+      
+      // Enter key - save entry
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleAddEntry();
+        return;
+      }
+      
+      // Escape key - close modal
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setShowDataEntry(false);
+        setColumnValues({});
+        setSelectedColumnForEntry(null);
+        return;
+      }
+      
+      // Numbers (both regular and numpad)
+      if (/^[0-9]$/.test(e.key)) {
+        e.preventDefault();
+        handleNumberPad(e.key);
+        return;
+      }
+      
+      // Decimal point
+      if (e.key === '.' || e.key === ',') {
+        e.preventDefault();
+        handleDecimal();
+        return;
+      }
+      
+      // Slash for ratios
+      if (e.key === '/') {
+        e.preventDefault();
+        handleSlash();
+        return;
+      }
+      
+      // Backspace
+      if (e.key === 'Backspace') {
+        e.preventDefault();
+        handleBackspace();
+        return;
+      }
+      
+      // Delete/Clear
+      if (e.key === 'Delete' || (e.ctrlKey && e.key === 'Backspace')) {
+        e.preventDefault();
+        handleClear();
+        return;
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [showDataEntry, selectedColumnForEntry, columnValues]);
 
   const getMonthlyData = () => {
     if (!selectedMonth) {
