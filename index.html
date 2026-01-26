@@ -3200,7 +3200,7 @@ function AssetView({ project, site, asset, onUpdate, onBack }) {
       window.addEventListener('keydown', handleKeyPress);
       return () => window.removeEventListener('keydown', handleKeyPress);
     }
-  }, [showDataEntry, columnValues, entryMode, selectedColumnForEntry]);
+  }, [showDataEntry, columnValues, entryMode, selectedColumnForEntry, handleNumberPad, handleDecimal, handleSlash, handleBackspace, handleClear, handleAddEntry]);
   const [showExportOptions, setShowExportOptions] = useState(false);
   const [showMonthFilter, setShowMonthFilter] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(() => {
